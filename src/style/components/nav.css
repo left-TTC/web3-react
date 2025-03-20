@@ -1,0 +1,72 @@
+
+
+.navbar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    /* the distance between every project*/
+    gap: 0.5rem;
+    align-items: center;
+    position: fixed;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+@media (min-width: 768px) {
+    .navbar {
+      flex-direction: row; /* 大屏幕上水平排列 */
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .linkbutton{
+        margin-left: -140px!important;
+        padding: 0 0rem!important;
+    }
+}
+
+.linkbutton{
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 800;
+    margin-left: 25px;
+    padding: 0.5rem 1rem;
+    color: white;
+}
+
+.linkbutton:hover {
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 12px;
+}
+
+.navlists{
+    margin:0 5px 0 30px;
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+}
+
+.navlists li a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+}
+
+.navlists li a:hover{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.navlists li a.active{
+    background-color: rgb(189, 168, 231);
+    border-radius: 10px;
+}
+
+.dropdown{
+    padding-right: 60px;
+}
+
+
+

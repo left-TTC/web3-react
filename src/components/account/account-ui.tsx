@@ -25,6 +25,7 @@ export function AccountBalance({ address }: { address: PublicKey }) {
     </div>
   )
 }
+
 export function AccountChecker() {
   const { publicKey } = useWallet()
   if (!publicKey) {
@@ -32,6 +33,7 @@ export function AccountChecker() {
   }
   return <AccountBalanceCheck address={publicKey} />
 }
+
 export function AccountBalanceCheck({ address }: { address: PublicKey }) {
   const { cluster } = useCluster()
   const mutation = useRequestAirdrop({ address })

@@ -6,6 +6,10 @@ import { ReactNode, useState } from 'react'
 import { AppModal } from '../ui/ui-layout'
 import { ClusterNetwork, useCluster } from './cluster-data-access'
 
+import "@styles/components/nav.css"
+
+//? means option
+//used to generate the solana explorer's url
 export function ExplorerLink({ path, label, className }: { path: string; label: string; className?: string }) {
   const { getExplorerUrl } = useCluster()
   return (
@@ -20,6 +24,7 @@ export function ExplorerLink({ path, label, className }: { path: string; label: 
   )
 }
 
+//used to check connection status of current solana cluster
 export function ClusterChecker({ children }: { children: ReactNode }) {
   const { cluster } = useCluster()
   const { connection } = useConnection()
@@ -124,6 +129,7 @@ export function ClusterUiModal({ hideModal, show }: { hideModal: () => void; sho
   )
 }
 
+//show current clusters and checkout it
 export function ClusterUiTable() {
   const { clusters, setCluster, deleteCluster } = useCluster()
   return (

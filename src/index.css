@@ -13,8 +13,14 @@ body,
   border-radius: 8px !important;
   padding-left: 16px !important;
   padding-right: 16px !important;
+  margin-right: 20px;
+  width: 200px;
 }
-.wallet-adapter-dropdown-list,
+
+.wallet-adapter-dropdown-list{
+  margin-right: 40px !important;
+}
+
 .wallet-adapter-button {
   font-family: inherit !important;
 }

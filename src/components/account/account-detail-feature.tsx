@@ -7,6 +7,7 @@ import { AccountBalance, AccountButtons, AccountTokens, AccountTransactions } fr
 
 export default function AccountDetailFeature() {
   const params = useParams() as { address?: string }
+  //useMemo will recalculate when the value is changed
   const address = useMemo(() => {
     if (!params.address) {
       return
@@ -15,7 +16,7 @@ export default function AccountDetailFeature() {
       return new PublicKey(params.address)
     } catch (e) {
       console.log(`Invalid public key`, e)
-    }
+    } 
   }, [params])
   if (!address) {
     return <div>Error loading account</div>

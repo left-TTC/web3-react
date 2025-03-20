@@ -5,7 +5,9 @@ import { atomWithStorage } from 'jotai/utils'
 import { createContext, ReactNode, useContext } from 'react'
 import toast from 'react-hot-toast'
 
+//solana block chain cluster
 export interface Cluster {
+  //name of cluster: such as "devnet"
   name: string
   endpoint: string
   network?: ClusterNetwork
@@ -34,14 +36,23 @@ export const defaultClusters: Cluster[] = [
     endpoint: clusterApiUrl('testnet'),
     network: ClusterNetwork.Testnet,
   },
+  {
+    name: 'mainnet-beta',
+    endpoint: clusterApiUrl('mainnet-beta'),
+    network: ClusterNetwork.Mainnet,
+  }
 ]
 
+//jotai's atomWitheStorage
 const clusterAtom = atomWithStorage<Cluster>('solana-cluster', defaultClusters[0])
 const clustersAtom = atomWithStorage<Cluster[]>('solana-clusters', defaultClusters)
 
 const activeClustersAtom = atom<Cluster[]>((get) => {
+  //get all clusters
   const clusters = get(clustersAtom)
+  //get using cluster
   const cluster = get(clusterAtom)
+  //keep original clusters and add an active cluster
   return clusters.map((item) => ({
     ...item,
     active: item.name === cluster.name,
@@ -66,6 +77,7 @@ export interface ClusterProviderContext {
 const Context = createContext<ClusterProviderContext>({} as ClusterProviderContext)
 
 export function ClusterProvider({ children }: { children: ReactNode }) {
+  //get active cluster
   const cluster = useAtomValue(activeClusterAtom)
   const clusters = useAtomValue(activeClustersAtom)
   const setCluster = useSetAtom(clusterAtom)
@@ -88,6 +100,8 @@ export function ClusterProvider({ children }: { children: ReactNode }) {
     setCluster: (cluster: Cluster) => setCluster(cluster),
     getExplorerUrl: (path: string) => `https://explorer.solana.com/${path}${getClusterUrlParam(cluster)}`,
   }
+  //means all the component that be packed by ClusterProvider
+  //can get the value
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
 

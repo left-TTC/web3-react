@@ -1,0 +1,82 @@
+
+.display{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+}
+
+.web3title{
+    margin-top: 270px;
+    display: flex;
+    flex-direction: column;
+}
+
+.web3title h1{
+    font-size: 120px;
+    font-weight: 1000;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .web3title h1 {
+        font-size: 80px; 
+    }
+    .web3title {
+        margin-top: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .web3title h1 {
+        font-size: 36px; 
+    }
+    .web3title h2 {
+        font-size: 25px!important; 
+        margin-top: 15px!important;
+    }
+    .querybox{
+        margin-top: 40px!important;
+    }
+    .querybox .querybar{
+        width: 420px;
+        height: 60px;
+        border-radius: 20px;
+    }
+    .querybox .leftinput{
+        margin: 0px 15px 0px 10px;
+        border-radius: 16px;
+        font-size: 16px;
+    }
+    .querybox .leftinput::placeholder{
+        font-size: 16px;
+    }
+    .querybox .rightbutton{
+        border-radius: 10px;
+    }
+    .querybox .rightbutton h1{
+        font-size: 12px;
+    }
+    .web3title {
+        margin-top: 150px;
+    }
+}
+
+.web3title h2{
+    font-size: 36px;
+    font-weight: 300;
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+}
+
+
+.querybox{
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 700px;
+}
+
+

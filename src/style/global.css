@@ -1,0 +1,27 @@
+:root {
+    --primary-color: #230343;
+    --second-color: #3e0973;
+  }
+
+
+.page{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-color);
+}
+
+.content{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 1024px) {
+    /* 在屏幕宽度为 1024px 或更大时应用这个规则 */
+    .content {
+      margin-left: auto;
+      margin-right: auto;
+    }
+}

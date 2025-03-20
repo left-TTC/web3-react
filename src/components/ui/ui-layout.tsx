@@ -6,19 +6,24 @@ import { AccountChecker } from '../account/account-ui'
 import { ClusterChecker, ClusterUiSelect, ExplorerLink } from '../cluster/cluster-ui'
 import { WalletButton } from '../solana/solana-provider'
 
+import "@styles/components/nav.css";
+import "@styles/global.css"
+
 export function UiLayout({ children, links }: { children: ReactNode; links: { label: string; path: string }[] }) {
   const pathname = useLocation().pathname
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="navbar bg-base-300 dark:text-neutral-content flex-col md:flex-row space-y-2 md:space-y-0">
-        <div className="flex-1">
-          <Link className="btn btn-ghost normal-case text-xl" to="/">
-            Web3PROWebsite
+    <div className="page">
+      {/** top navgation bar */}
+      <div className="navbar">
+        <div className="flex-1 ">
+          <Link className="linkbutton" to="/">
+            Web3PRO
           </Link>
-          <ul className="menu menu-horizontal px-1 space-x-2">
+          <ul className="navlists">
             {links.map(({ label, path }) => (
               <li key={path}>
+                {/** by check the path name to check wheather active */}
                 <Link className={pathname.startsWith(path) ? 'active' : ''} to={path}>
                   {label}
                 </Link>
@@ -31,10 +36,13 @@ export function UiLayout({ children, links }: { children: ReactNode; links: { la
           <ClusterUiSelect />
         </div>
       </div>
+      {/**check wheather the clusters are useful */}
       <ClusterChecker>
         <AccountChecker />
       </ClusterChecker>
-      <div className="flex-grow mx-4 lg:mx-auto">
+      {/**the content parts */}
+      <div className="content">
+        {/** lazy loading */}
         <Suspense
           fallback={
             <div className="text-center my-32">
@@ -44,8 +52,10 @@ export function UiLayout({ children, links }: { children: ReactNode; links: { la
         >
           {children}
         </Suspense>
+        {/**show notification */}
         <Toaster position="bottom-right" />
       </div>
+      {/**page footer */}
       <footer className="footer footer-center p-4 bg-base-300 text-base-content">
         <aside>
           <p>

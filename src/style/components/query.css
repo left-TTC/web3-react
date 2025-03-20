@@ -1,0 +1,47 @@
+.querybar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 810px;
+    height: 120px;
+    border-radius: 30px;
+    background-color: #3e0973;
+    align-items: center;
+    border: 2px solid white;
+}
+
+
+.leftinput{
+    border-radius: 20px;
+    background-color: #230343;
+    width: 83%;
+    height: 76%;
+    border: 2px solid #230343;
+    margin: 0px 20px 0px 20px;
+    box-sizing: border-box;
+    align-items: center;
+    color: white;
+    font-size: 28px;
+    padding: 2px 0 2px 30px;
+}
+
+.leftinput::placeholder{
+    font-size: 28px;
+}
+
+.rightbutton{
+    margin-right: 3%;
+    height: 76%;
+    border-radius: 15px;
+    background-color: aquamarine;
+    width: 11%;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rightbutton h1{
+    font-size: 20px;
+    color: white;  
+}

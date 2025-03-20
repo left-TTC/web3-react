@@ -13,15 +13,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { useTransactionToast } from '../ui/ui-layout'
 
+//hook: query the balance of a specified Solana address
 export function useGetBalance({ address }: { address: PublicKey }) {
   const { connection } = useConnection()
 
   return useQuery({
+    //querykey: this is a method to more efficiently query
     queryKey: ['get-balance', { endpoint: connection.rpcEndpoint, address }],
     queryFn: () => connection.getBalance(address),
   })
 }
 
+//get signature record
 export function useGetSignatures({ address }: { address: PublicKey }) {
   const { connection } = useConnection()
 
@@ -31,6 +34,7 @@ export function useGetSignatures({ address }: { address: PublicKey }) {
   })
 }
 
+//get the amount of all kinds of tokens
 export function useGetTokenAccounts({ address }: { address: PublicKey }) {
   const { connection } = useConnection()
 
@@ -101,6 +105,7 @@ export function useTransferSol({ address }: { address: PublicKey }) {
   })
 }
 
+//requets airdrop
 export function useRequestAirdrop({ address }: { address: PublicKey }) {
   const { connection } = useConnection()
   const transactionToast = useTransactionToast()

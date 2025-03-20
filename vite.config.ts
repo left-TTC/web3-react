@@ -40,4 +40,10 @@ export default defineConfig({
     },
   },
   plugins: [viteTsconfigPaths(), react(), nodePolyfills()],
+  resolve: {
+    alias:{
+      '@styles': '/src/style',
+      '@util': '/src/utils',
+    }
+  },
 })

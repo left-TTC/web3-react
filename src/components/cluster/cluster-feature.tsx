@@ -3,6 +3,7 @@ import { AppHero } from '../ui/ui-layout'
 import { ClusterUiModal, ClusterUiTable } from './cluster-ui'
 
 export default function ClusterFeature() {
+  //Decide whether to display the UI
   const [showModal, setShowModal] = useState(false)
 
   return (
