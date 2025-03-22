@@ -1,0 +1,215 @@
+{
+    "address": "BWK7ZQWjQ9fweneHfsYmof7znPr5GyedCWs2J8JhHxD3",
+    "metadata": {
+      "name": "web3_name_service",
+      "version": "0.1.0",
+      "spec": "0.1.0",
+      "description": "Created with Anchor"
+    },
+    "instructions": [
+      {
+        "name": "create",
+        "discriminator": [
+          24,
+          30,
+          200,
+          40,
+          5,
+          28,
+          7,
+          119
+        ],
+        "accounts": [
+          {
+            "name": "name_account",
+            "writable": true
+          },
+          {
+            "name": "system_account",
+            "address": "11111111111111111111111111111111"
+          },
+          {
+            "name": "payer",
+            "signer": true
+          },
+          {
+            "name": "domain_class",
+            "signer": true
+          },
+          {
+            "name": "root_domain_opt",
+            "signer": true,
+            "optional": true
+          }
+        ],
+        "args": [
+          {
+            "name": "data",
+            "type": {
+              "defined": {
+                "name": "base_data"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "discriminator": [
+          165,
+          204,
+          60,
+          98,
+          134,
+          15,
+          83,
+          134
+        ],
+        "accounts": [
+          {
+            "name": "name_account"
+          },
+          {
+            "name": "submit_account",
+            "signer": true
+          },
+          {
+            "name": "refund_target"
+          }
+        ],
+        "args": []
+      },
+      {
+        "name": "transfer",
+        "discriminator": [
+          163,
+          52,
+          200,
+          231,
+          140,
+          3,
+          69,
+          186
+        ],
+        "accounts": [
+          {
+            "name": "class",
+            "signer": true
+          },
+          {
+            "name": "name_account"
+          },
+          {
+            "name": "submit_account",
+            "signer": true
+          },
+          {
+            "name": "root_domain_account"
+          }
+        ],
+        "args": [
+          {
+            "name": "transfer",
+            "type": {
+              "defined": {
+                "name": "transfer_info"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "discriminator": [
+          219,
+          200,
+          88,
+          176,
+          158,
+          63,
+          253,
+          127
+        ],
+        "accounts": [
+          {
+            "name": "name_account"
+          },
+          {
+            "name": "name_update_signer",
+            "signer": true
+          },
+          {
+            "name": "root_domain",
+            "signer": true,
+            "optional": true
+          }
+        ],
+        "args": [
+          {
+            "name": "data",
+            "type": {
+              "defined": {
+                "name": "update_data"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "types": [
+      {
+        "name": "base_data",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "lamports",
+              "type": "u64"
+            },
+            {
+              "name": "hashed_name",
+              "type": "bytes"
+            },
+            {
+              "name": "space",
+              "type": "u32"
+            },
+            {
+              "name": "owner",
+              "type": "pubkey"
+            },
+            {
+              "name": "ipfs",
+              "type": {
+                "option": "bytes"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "transfer_info",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "owner",
+              "type": "pubkey"
+            }
+          ]
+        }
+      },
+      {
+        "name": "update_data",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "ipfs",
+              "type": "bytes"
+            }
+          ]
+        }
+      }
+    ]
+  }

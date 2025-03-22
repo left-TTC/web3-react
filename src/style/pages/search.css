@@ -1,26 +1,18 @@
 
 
-.search{
-    display: flex;
-    flex-direction: row;
-}
-
-.spacefornav{
-    height: 60px;
-}
-
 .toptab{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 100px;
+    margin-top: 200px;
 }
 
 .toptab .querybar{
     height: 65px;
-    width: 50%;
     border-radius: 13px;
     border: 2px solid #c59af1;
+    width: 90vw;
+    max-width: 1200px;
 }
 
 .toptab .leftinput{
@@ -39,5 +31,19 @@
 
 .toptab .domainShowShell{
     margin-top: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 600px;
+}
+
+@media (max-width: 1200px)
+{
+    .toptab .domainShowShell{
+        flex-direction: column;
+        width: 90vw;
+        min-width: 500px;
+        height: 900px;
+    }
+    .toptab .domainShowShell .RightBox{
+        width: 88%;
+    }
+    
 }

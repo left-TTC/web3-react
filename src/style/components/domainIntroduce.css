@@ -1,11 +1,12 @@
 .domainShowShell{
-    width: 50%;
     height: 500px;
     background-color: #3e0973;
     border-radius: 30px;
     box-shadow: 0px 0px 20px white;
     display: flex;
     flex-direction: row;
+    width: 50vw;
+    min-width: 1200px;
 }
 
 .RightBox{
@@ -36,7 +37,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 60px;
+    margin-top: 50px;
 }
 
 .avaBox{
@@ -61,6 +62,9 @@
     background-color: #3e0973;
     border: 1px solid rgb(80, 34, 230);
     margin-right: 270px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .RightBox h2{
@@ -91,6 +95,7 @@
 .dir h1{
     font-size: 20px;
     font-weight: 900;
+    color: white;
 }
 
 .wait{

@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.31.0",
     "@solana/spl-token": "0.4.12",
     "@solana/wallet-adapter-base": "0.9.24",
     "@solana/wallet-adapter-react": "0.15.36",
