@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ClusterProvider } from '../components/cluster/cluster-data-access'
 import { SolanaProvider } from '../components/solana/solana-provider'
 import { AppRoutes } from './app-routes'
+import { ProgramContextProvider } from '@/components/program/program-provider'
 
 //what is queryclient?
 //manage all the cache of all query and change request
@@ -15,7 +16,9 @@ export function App() {
     <QueryClientProvider client={client}>
       <ClusterProvider>
         <SolanaProvider>
-          <AppRoutes />
+          <ProgramContextProvider>
+            <AppRoutes />
+          </ProgramContextProvider>
         </SolanaProvider>
       </ClusterProvider>
     </QueryClientProvider>

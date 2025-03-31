@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { checkClass, isCheckDomain, query_domain, WEB3_NAME_SERVICE_ID, WEB3_ROOT} from "../../utils/aboutquery"
+import { isCheckDomain, queryDomain, WEB3_NAME_SERVICE_ID, WEB3_ROOT} from "../../utils/aboutquery"
 import { useNavigate } from "react-router-dom";
 
 import "../../style/components/query.css"
@@ -32,9 +32,8 @@ const Query = ({initValue}: QueryProps) => {
         }else{
             rootOpt = null;
         }
-        const domainClass = checkClass(domainArray[1]);
-        const queryResult = await query_domain(
-            domainArray[0], WEB3_NAME_SERVICE_ID, domainClass, rootOpt
+        const queryResult = await queryDomain(
+            domainArray[0], WEB3_NAME_SERVICE_ID, rootOpt
         );
 
         navi("/search", {

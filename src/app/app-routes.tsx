@@ -8,12 +8,15 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 // const ClusterFeature = lazy(() => import('../components/cluster/cluster-feature'))
 const Homepage = lazy(() => import('../pages/index')) 
 const Searchpage = lazy(() => import('../pages/search'))
+const Userpage = lazy(() => import('../pages/user'))
 
 //links lib
 const links: { label: string; path: string }[] = [
   // { label: 'Account', path: '/account' },
   // { label: 'Clusters', path: '/clusters' },
-  {label: 'Main', path: '/index'}
+  {label: 'Main', path: '/index'},
+  {label: 'Home', path: '/user'},
+
 ]
 
 //route reflect
@@ -23,6 +26,7 @@ const routes: RouteObject[] = [
   // { path: '/clusters', element: <ClusterFeature /> },
   { path: '/index', element: <Homepage /> },
   { path: '/search', element: <Searchpage />},
+  { path: '/user', element: <Userpage />},
 ]
 
 export function AppRoutes() {

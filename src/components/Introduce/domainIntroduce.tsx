@@ -2,19 +2,12 @@ import "../../style/components/domainIntroduce.css";
 import star from "../../assets/star.svg"
 import { calculateDomainPrice, getSeedAndKey, WEB3_NAME_SERVICE_ID } from "@/utils/aboutquery";
 import { Buffer } from "buffer";
-import { AccountInfo, Keypair, PublicKey, SystemProgram} from "@solana/web3.js";
-import { BN, Program, AnchorProvider,  } from "@coral-xyz/anchor";
+import { AccountInfo, Keypair} from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
 import { getHashedName } from "@/utils/aboutquery"
-import { useConnection, useWallet, Wallet, useAnchorWallet,   } from '@solana/wallet-adapter-react'
-import { Web3NameService } from "../../anchor/nameService/idl";
-import idl from "../../anchor/nameService/IDL.json"
-import { useCluster } from "../cluster/cluster-data-access";
-
-
-import testClassKeyPair from "/home/f/wallet/captain-solana-wallet.json";
-import testPayerKeypair from "/home/f/wallet/left-solana-wallet.json";
-
-import * as anchor from "@coral-xyz/anchor";
+import { useAnchorWallet, useWallet,  } from '@solana/wallet-adapter-react'
+import { useNameService } from "../program/name-service-provider";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui"
 
 
 
@@ -24,119 +17,121 @@ interface introduceProps {
 }
 
 const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
+    // Define local variables for left and right content
     let leftContent;
     let rightContent;
 
-    //get info form context
-
+    // Get price and get a complete domain name
     const price = calculateDomainPrice(domainName);
     const showDomainName = completeName(domainName);
-    const anchorWallet = useAnchorWallet();
-    const {connection} = useConnection();
-    const cluster = useCluster();
-    
-      
-    
 
-    const createNameTest = async() => {
-        if(anchorWallet != undefined){
-            
-            if (anchorWallet){
-                const provider = new AnchorProvider(
-                    connection,
-                    anchorWallet,
-                    { commitment: 'confirmed' }
-                  );
-                const program: anchor.Program<Web3NameService> = new anchor.Program(idl, provider);
-                const secretKey = Uint8Array.from(testClassKeyPair)
-                const domainClass = Keypair.fromSecretKey(secretKey);
-                console.log("domainClass:", domainClass.publicKey.toBase58())
-                const hashedNameUint8 = getHashedName(domainName)
-                const hashedName = Buffer.from(hashedNameUint8);
-                const {nameAccountKey} = getSeedAndKey(
-                    WEB3_NAME_SERVICE_ID, hashedNameUint8, domainClass.publicKey, null)
-                console.log(cluster)
-                console.log(nameAccountKey.toBase58())
-                console.log("payer:", anchorWallet.publicKey.toBase58())
+    // Get values from context
+    const { nameProgram } = useNameService();
+    const wallet = useAnchorWallet();
+    const { connected } = useWallet()
+    const { setVisible: setModalVisible } = useWalletModal()
 
-                const lamports = new BN(10000000); 
-                const space = 500; 
-                const owner = anchorWallet.publicKey;
-                const baseData = {
-                    lamports: lamports,
-                    hashedName: hashedName,
-                    space: space,
-                    owner: owner,
-                    ipfs: null,
-                };
-                if (program != null){
-                    try{
-                    const tx = await program.methods
+    // Prepare domain class and other necessary values
+    const hashedNameUint8 = getHashedName(domainName);
+    const hashedName = Buffer.from(hashedNameUint8);
+
+    const { nameAccountKey } = getSeedAndKey(
+        WEB3_NAME_SERVICE_ID, hashedNameUint8, null
+    );
+
+    // Function to create a domain (triggered on button click)
+    const createNameTest = async () => {
+        //try to reconnect wallet
+        if (!connected) {
+            try {
+                console.log('Wallet successfully connected')
+                setModalVisible(true)
+            } catch (err) {
+                console.error('Failed to connect wallet:', err)
+            }
+        }
+
+        if (nameProgram && wallet) {
+            console.log(nameAccountKey.toBase58());
+            console.log("payer:", wallet.publicKey.toBase58());
+
+            // Define lamports and space for the domain
+            const lamports = new BN(10000000);
+            const space = 0; 
+            const owner = wallet.publicKey;
+
+            const {nameAccountKey: recordAccountKey} = getSeedAndKey(
+                nameProgram.programId, getHashedName(owner.toBase58()), null
+            )
+
+            const ipfsHash = "QmPu4ZT2zPfyVY8CA2YBzqo9HfAV79nDuuf177tMrQK1py";
+            const ipfsBytes = Buffer.from(ipfsHash, 'utf-8');
+
+            const baseData = {
+                lamports: lamports,
+                name: domainName,
+                space: space,
+                owner: owner,
+                ipfs: ipfsBytes,
+            }
+
+            try {
+                const tx = await nameProgram.methods
                     .create(baseData)
                     .accounts({
                         nameAccount: nameAccountKey,
-                        payer: anchorWallet.publicKey,
-                        domainClass: domainClass.publicKey,
-                        rootDomainOpt: undefined,
+                        recordAccount: recordAccountKey,
+                        payer: wallet.publicKey,
+                        rootDomainOpt: null,
                     })
-                    .signers([domainClass])
-                    .rpc()
-                    }catch(err){
-                        console.log(err)
-                    }
-                }
-                    }
+                    .rpc();
+                console.log('Transaction successful:', tx);
+            } catch (err) {
+                console.error('Error creating name:', err);
+            }
+        } else {
+            console.log("Wallet not connected or nameProgram not available");
+        }
+    };
 
-                
-                };
-    }
-
-    //means domain is available
-    if (domainInfo === null){
-        leftContent = 
+    // Conditional rendering based on domainInfo
+    if (domainInfo === null) {
+        leftContent = (
             <div className="RightBox">
                 <div className="okBox">
                     <div className="avaBox">
                         <h1>Available domain</h1>
                     </div>
                     <button className="starBox">
-                        <img src={star} width="20"/>
+                        <img src={star} width="20" alt="star" />
                     </button>
                 </div>
                 <h2>{showDomainName}</h2>
                 <h3>{price} USDC</h3>
                 <div className="buyBox">
                     <button className="dir" onClick={createNameTest}>
-                        <h1>buy now</h1>
+                        <h1>Buy Now</h1>
                     </button>
                     <button className="wait">
-                        <h1>add to cart</h1>
+                        <h1>Add to Cart</h1>
                     </button>
                 </div>
             </div>
-        rightContent = 
-            <div className="LeftBox">
+        );
 
-            </div>
-    }else{
-        leftContent = 
-            <div className="RightBox">
-
-            </div>
-        rightContent = 
-            <div className="LeftBox">
-
-            </div>
+        rightContent = <div className="LeftBox"></div>;
+    } else {
+        leftContent = <div className="RightBox"></div>;
+        rightContent = <div className="LeftBox"></div>;
     }
 
-
-    return(
+    return (
         <div className="domainShowShell">
             {leftContent}
             {rightContent}
         </div>
-    )
-}
+    );
+};
 
 export default Showdomain;
 
@@ -146,8 +141,4 @@ function completeName(domain: string){
     }else{
         return (domain + ".web3")
     }
-}
-
-export const useSolanaProgram = () => {
-    
 }

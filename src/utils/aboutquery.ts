@@ -1,15 +1,12 @@
 import { sha256 } from 'js-sha256';
 import { Buffer } from 'buffer'; // To handle binary data in Node.js
 import { PublicKey, Connection, Keypair } from '@solana/web3.js'; 
-import idl from "../anchor/nameService/IDL.json"
 
 const HASH_PREFIX = "WEB3 Name Service";
 
-const DEVNET_URL = "https://api.devnet.solana.com";
+export const DEVNET_URL = "https://api.devnet.solana.com";
 
-const ROOT_CLASS = new PublicKey("52F3LuKrH19f8JATdXn1w9F3kFQceK3n5ticQmbjVs78");
-
-export const WEB3_NAME_SERVICE_ID = new PublicKey("BWK7ZQWjQ9fweneHfsYmof7znPr5GyedCWs2J8JhHxD3");
+export const WEB3_NAME_SERVICE_ID = new PublicKey("2zwHkEcbGRfzif4iCtpNgQntPgZDRhAukteiuDeAcjYU");
 
 export const WEB3_ROOT = new PublicKey("52F3LuKrH19f8JATdXn1w9F3kFQceK3n5ticQmbjVs78");
 
@@ -22,10 +19,9 @@ export function getHashedName(name: string){
 }
 
 export function getSeedAndKey(
-    programid: PublicKey, hashedName: Uint8Array, domainClass: PublicKey, rootOpt: null | PublicKey ){
+    programid: PublicKey, hashedName: Uint8Array, rootOpt: null | PublicKey ){
     
     let seeds = new Uint8Array([...hashedName]);
-    seeds = new Uint8Array([...seeds, ...domainClass.toBytes()]);
     
     const rootDomain = rootOpt || PublicKey.default;
     seeds = new Uint8Array([...seeds, ...rootDomain.toBytes()]);
@@ -47,12 +43,12 @@ export function getSeedAndKey(
 }
 
 
-export async function query_domain(
-    name: string, programid: PublicKey, domainClass: PublicKey, rootOpt: PublicKey | null) {
+export async function queryDomain(
+    name: string, programid: PublicKey,rootOpt: PublicKey | null) {
     try{
         const hashedName = getHashedName(name);
         const {nameAccountKey} = getSeedAndKey(
-            programid, hashedName, domainClass, rootOpt);
+            programid, hashedName, rootOpt);
 
         if (!nameAccountKey) {
             throw new Error("Failed to generate PDA");
@@ -68,9 +64,6 @@ export async function query_domain(
             const accountData = accountInfo.data
             const a = decodeNameRecordHeader(accountData)
             console.log(a)
-            const secretKey = Uint8Array.from([0, 212, 141, 200, 155, 38, 30, 99, 207, 137, 15, 97, 0, 119, 24, 140, 56, 8, 57, 174, 84, 215, 171, 1, 228, 73, 78, 138, 87, 148, 227, 101, 59, 192, 52, 60, 61, 238, 13, 30, 197, 128, 52, 53, 39, 140, 183, 188, 96, 130, 50, 237, 152, 174, 225, 240, 196, 203, 83, 147, 18, 2, 64, 43])
-            const domainClass = Keypair.fromSecretKey(secretKey);
-            console.log("domainClass:", domainClass.publicKey.toBase58())
             return accountInfo;
         }else{
             console.log("not exist");
@@ -79,10 +72,6 @@ export async function query_domain(
     }catch(err){
         console.log("err happened when quering:", err)
     }
-}
-
-export function checkClass(className: string){
-    return ROOT_CLASS;
 }
 
 
@@ -95,32 +84,47 @@ export function calculateDomainPrice(domain: string){
     return 20
 }
 
+
 interface NameRecordHeader {
-    owner: string; // 转换为公钥字符串
-    root: string; // 转换为公钥字符串
-    class: string; // 转换为公钥字符串
-    ipfs: string | null; // 转换为 IPFS CID 字符串
+    owner: string;
+    root: string; 
+    ipfs: string | null; 
 }
 
 function decodeNameRecordHeader(data: Uint8Array): NameRecordHeader {
 
+    const PUBKEY_LENGTH = 32;
+    const OPTION_TAG_LENGTH = 1;
+    const IPFS_LENGTH = 46;
+
+    let offset = 0; 
+
     // 解析 owner (32 bytes)
-    const owner = new PublicKey(data.slice(0, 32)).toBase58();
+    const owner = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();
+    offset += PUBKEY_LENGTH;
 
     // 解析 root (32 bytes)
-    const root = new PublicKey(data.slice(32, 64)).toBase58();
+    const root = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();
+    offset += PUBKEY_LENGTH;
 
-    // 解析 class (32 bytes)
-    const classKey = new PublicKey(data.slice(64, 96)).toBase58();
+    // 解析 ipfs (Option<[u8; 46]>)
+    const ipfsExists = data[offset] === 1; // Option标记
+    offset += OPTION_TAG_LENGTH;
 
-    // 解析 ipfs (46 bytes)
-    const ipfsExists = data[96] === 1; // Option<[u8; 46]> 的第一个字节表示是否存在
-    const ipfs = ipfsExists ? new TextDecoder().decode(data.slice(97, 143)) : null; // 将字节数组转换为字符串
+    let ipfs: string | null = null;
+    if (ipfsExists) {
+        // 提取IPFS CID（假设存储的是UTF-8编码的字符串）
+        const ipfsBytes = data.slice(offset, offset + IPFS_LENGTH);
+        // 去除可能的填充空字节
+        const nullByteIndex = ipfsBytes.findIndex(b => b === 0);
+        const effectiveLength = nullByteIndex === -1 ? IPFS_LENGTH : nullByteIndex;
+        ipfs = new TextDecoder().decode(ipfsBytes.slice(0, effectiveLength));
+        offset += IPFS_LENGTH;
+    }
 
     return {
         owner,
         root,
-        class: classKey,
         ipfs,
     };
 }
