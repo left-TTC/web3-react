@@ -6,7 +6,7 @@ const HASH_PREFIX = "WEB3 Name Service";
 
 export const DEVNET_URL = "https://api.devnet.solana.com";
 
-export const WEB3_NAME_SERVICE_ID = new PublicKey("2zwHkEcbGRfzif4iCtpNgQntPgZDRhAukteiuDeAcjYU");
+export const WEB3_NAME_SERVICE_ID = new PublicKey("EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9");
 
 export const WEB3_ROOT = new PublicKey("52F3LuKrH19f8JATdXn1w9F3kFQceK3n5ticQmbjVs78");
 
@@ -85,19 +85,20 @@ export function calculateDomainPrice(domain: string){
 }
 
 
-interface NameRecordHeader {
+export interface NameRecordHeader {
     owner: string;
     root: string; 
     ipfs: string | null; 
 }
 
-function decodeNameRecordHeader(data: Uint8Array): NameRecordHeader {
+export function decodeNameRecordHeader(data: Uint8Array): NameRecordHeader {
 
+    const DISCRIMINATOR = 8;
     const PUBKEY_LENGTH = 32;
     const OPTION_TAG_LENGTH = 1;
     const IPFS_LENGTH = 46;
 
-    let offset = 0; 
+    let offset = DISCRIMINATOR; 
 
     // 解析 owner (32 bytes)
     const owner = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();

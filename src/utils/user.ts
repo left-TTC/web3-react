@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js"
-import { DEVNET_URL, getHashedName, getSeedAndKey } from "./aboutquery"
+import { decodeNameRecordHeader, DEVNET_URL, getHashedName, getSeedAndKey, WEB3_NAME_SERVICE_ID } from "./aboutquery"
 import { AccountInfo } from "@solana/web3.js";
 
 
@@ -62,13 +62,14 @@ interface RecordHeader {
 
 function decodeRecordHeader(data: Uint8Array): RecordHeader{
 
+    const DISCRIMINATOR = 8;
     const PUBKEY_LENGTH = 32;
     const VEC_LENGTH_PREFIX = 4;
 
     const length = data.byteLength;
     console.log(length)
 
-    let offset = 0;
+    let offset = DISCRIMINATOR;
 
     const root = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();
     offset += PUBKEY_LENGTH;
@@ -82,4 +83,27 @@ function decodeRecordHeader(data: Uint8Array): RecordHeader{
         root,
         domains, 
     };
+}
+
+export async function fetchAccountIpfs(
+    connection: Connection, domain: string, root: PublicKey){
+    
+    const {nameAccountKey: queryAccount} = getSeedAndKey(
+        WEB3_NAME_SERVICE_ID, getHashedName(domain), null);
+
+    try{
+        const accountInfo = await connection.getAccountInfo(queryAccount);
+        if (accountInfo){
+            const decode =  decodeNameRecordHeader(accountInfo.data);
+            if (decode.owner = root.toBase58()){
+                return decode.ipfs;
+            }else{
+                throw new Error("invallid owner");
+            }
+        }else{
+            throw new Error("can't get accountinfo");
+        }
+    }catch{
+
+    }
 }

@@ -47,3 +47,123 @@
     font-size: 36px;
     color: white;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background: white;
+    height: 34%;
+    width: 30%;
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modifyTitle{
+    display: flex;
+    justify-content: center;
+}
+
+.modifyTitle h1{
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.showRevisingName{
+    display: flex;
+    flex-direction: row;
+    margin-top: 14px;
+    align-items: center;
+}
+
+.showRevisingName p{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.showRevisingName h1 {
+    font-size: 22px;
+    margin-left: 20px;
+}
+
+.ipfsShow{
+    margin-top: 10px;
+}
+
+.ipfsShow h1{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.ipfsShowbox{
+    background-color: grey;
+    width: 90%;
+    margin-left: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.ipfsShowbox h2{
+    color: white;
+}
+
+.inputBox {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.inputBox h1 {
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.input {
+    text-align: center;
+    background-color: grey;
+    width: 90%;
+    margin-left: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    height: 40px;
+    color: white;
+}
+
+.buttonBox{
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    justify-content: space-evenly;
+}
+
+.confrimButton{
+    height: 40px;
+    width: 13%;
+    background-color: #007bff;
+    border-radius: 5px;
+}
+
+.cancleButton{
+    height: 40px;
+    width: 13%;
+    background-color: grey;
+    border-radius: 5px;
+}

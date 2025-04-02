@@ -1,5 +1,5 @@
 {
-  "address": "2zwHkEcbGRfzif4iCtpNgQntPgZDRhAukteiuDeAcjYU",
+  "address": "EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9",
   "metadata": {
     "name": "web3_name_service",
     "version": "0.1.0",
@@ -138,18 +138,17 @@
           "signer": true
         },
         {
-          "name": "root_domain",
-          "signer": true,
-          "optional": true
+          "name": "root_domain"
         }
       ],
       "args": [
         {
-          "name": "data",
+          "name": "update_ipfs",
           "type": {
-            "defined": {
-              "name": "update_data"
-            }
+            "array": [
+              "u8",
+              46
+            ]
           }
         }
       ]
@@ -241,18 +240,6 @@
           {
             "name": "owner",
             "type": "pubkey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "update_data",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "ipfs",
-            "type": "bytes"
           }
         ]
       }

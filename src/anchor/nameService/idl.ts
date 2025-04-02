@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/web3_name_service.json`.
  */
 export type Web3NameService = {
-  "address": "2zwHkEcbGRfzif4iCtpNgQntPgZDRhAukteiuDeAcjYU",
+  "address": "EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9",
   "metadata": {
     "name": "web3NameService",
     "version": "0.1.0",
@@ -144,18 +144,17 @@ export type Web3NameService = {
           "signer": true
         },
         {
-          "name": "rootDomain",
-          "signer": true,
-          "optional": true
+          "name": "rootDomain"
         }
       ],
       "args": [
         {
-          "name": "data",
+          "name": "updateIpfs",
           "type": {
-            "defined": {
-              "name": "updateData"
-            }
+            "array": [
+              "u8",
+              46
+            ]
           }
         }
       ]
@@ -247,18 +246,6 @@ export type Web3NameService = {
           {
             "name": "owner",
             "type": "pubkey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "updateData",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "ipfs",
-            "type": "bytes"
           }
         ]
       }
