@@ -1,0 +1,15 @@
+.auctiondomains{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    height: 300px;
+    width: 60vw;
+    border: 3px solid rebeccapurple;
+    border-radius: 20px;
+}
+
+.auctiondomains h1{
+    color: white;
+}

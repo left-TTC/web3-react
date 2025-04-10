@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Web3NameService } from "@/anchor/nameService/idl";
-import idl from "@/anchor/nameService/IDL.json";
+import { Web3NameService } from "@/components/program/anchor/nameService/idl";
+import idl from "@/components/program/anchor/nameService/IDL.json";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import * as anchor from "@coral-xyz/anchor";
 
@@ -19,7 +19,6 @@ export function NameServiceProvider({ children }: { children: ReactNode}){
     const anchorWallet = useAnchorWallet();
 
     const [nameProgram, setnameProgram] = useState<anchor.Program<Web3NameService> | null>(null);
-    const [walletStatus, setWalletStatus] = useState<boolean>(false);
     
     useEffect(() => {
         if (anchorWallet) {
@@ -30,10 +29,8 @@ export function NameServiceProvider({ children }: { children: ReactNode}){
           const newProgram = new anchor.Program<Web3NameService>(idl, provider);
     
           setnameProgram(newProgram);
-          setWalletStatus(true);
         } else {
-        setnameProgram(null);
-          setWalletStatus(false);
+          setnameProgram(null);
         }
       }, [anchorWallet, connection]);
     

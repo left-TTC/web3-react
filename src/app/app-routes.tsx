@@ -9,6 +9,7 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 const Homepage = lazy(() => import('../pages/index')) 
 const Searchpage = lazy(() => import('../pages/search'))
 const Userpage = lazy(() => import('../pages/user'))
+const Auctionpage = lazy(() => import('../pages/auction'))
 
 //links lib
 const links: { label: string; path: string }[] = [
@@ -16,7 +17,7 @@ const links: { label: string; path: string }[] = [
   // { label: 'Clusters', path: '/clusters' },
   {label: 'Main', path: '/index'},
   {label: 'Home', path: '/user'},
-
+  {label: 'Auction', path: '/auction'},
 ]
 
 //route reflect
@@ -27,6 +28,7 @@ const routes: RouteObject[] = [
   { path: '/index', element: <Homepage /> },
   { path: '/search', element: <Searchpage />},
   { path: '/user', element: <Userpage />},
+  { path: '/auction', element: <Auctionpage />},
 ]
 
 export function AppRoutes() {

@@ -2,8 +2,9 @@
 //all programs about our project
 
 import React, { ReactNode } from "react";
-import idl from "@/anchor/nameService/IDL.json";
+import idl from "@/components/program/anchor/nameService/IDL.json";
 import { NameServiceProvider } from "./name-service-provider";
+import { AuctionServiceProvider } from "./auction-provider";
 
 
 export interface ProgramContext{
@@ -20,7 +21,11 @@ export function ProgramContextProvider({ children }: { children: ReactNode }) {
 
     return (
         <Context.Provider value={value}>
-            <NameServiceProvider>{children}</NameServiceProvider>
+            <NameServiceProvider>
+                <AuctionServiceProvider>
+                    {children}
+                </AuctionServiceProvider>
+            </NameServiceProvider>
         </Context.Provider>
     )
 }

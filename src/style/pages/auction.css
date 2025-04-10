@@ -1,0 +1,9 @@
+.Auctionpage {
+    height: 96vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.auctionpart{
+    margin-top: 270px;
+}

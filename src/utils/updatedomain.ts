@@ -1,4 +1,4 @@
-import { Web3NameService } from "@/anchor/nameService/idl";
+import { Web3NameService } from "@/components/program/anchor/nameService/idl";
 import { revisingDomainInfo } from "@/pages/user";
 import { Program } from "@coral-xyz/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";

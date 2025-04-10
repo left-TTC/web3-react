@@ -100,23 +100,18 @@ export function decodeNameRecordHeader(data: Uint8Array): NameRecordHeader {
 
     let offset = DISCRIMINATOR; 
 
-    // 解析 owner (32 bytes)
     const owner = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();
     offset += PUBKEY_LENGTH;
 
-    // 解析 root (32 bytes)
     const root = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();
     offset += PUBKEY_LENGTH;
 
-    // 解析 ipfs (Option<[u8; 46]>)
-    const ipfsExists = data[offset] === 1; // Option标记
+    const ipfsExists = data[offset] === 1; 
     offset += OPTION_TAG_LENGTH;
 
     let ipfs: string | null = null;
     if (ipfsExists) {
-        // 提取IPFS CID（假设存储的是UTF-8编码的字符串）
         const ipfsBytes = data.slice(offset, offset + IPFS_LENGTH);
-        // 去除可能的填充空字节
         const nullByteIndex = ipfsBytes.findIndex(b => b === 0);
         const effectiveLength = nullByteIndex === -1 ? IPFS_LENGTH : nullByteIndex;
         ipfs = new TextDecoder().decode(ipfsBytes.slice(0, effectiveLength));

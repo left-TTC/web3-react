@@ -1,0 +1,214 @@
+{
+  "address": "C1z2SrwrPnN5WrhkXNoPnB6KBiCsp22bZJ2RtQfAMhuq",
+  "metadata": {
+    "name": "auction",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "check_funding_account",
+      "discriminator": [
+        33,
+        17,
+        89,
+        199,
+        208,
+        99,
+        134,
+        155
+      ],
+      "accounts": [
+        {
+          "name": "web3_name_service",
+          "address": "EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9"
+        },
+        {
+          "name": "all_root_record_account",
+          "writable": true
+        },
+        {
+          "name": "will_create_root",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "address": "2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh"
+        },
+        {
+          "name": "fundraising_state_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  101,
+                  98,
+                  51,
+                  32,
+                  65,
+                  117,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "will_create_root"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "crowding_account_lists",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  110,
+                  105,
+                  113,
+                  117,
+                  101,
+                  32,
+                  119,
+                  101,
+                  98,
+                  51,
+                  32,
+                  97,
+                  117,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  32,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  32,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "data",
+          "type": {
+            "defined": {
+              "name": "CrowdInfo"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "CrowdfundingAccount",
+      "discriminator": [
+        74,
+        235,
+        70,
+        131,
+        52,
+        104,
+        31,
+        254
+      ]
+    },
+    {
+      "name": "FundingAccountRecord",
+      "discriminator": [
+        242,
+        217,
+        203,
+        165,
+        88,
+        87,
+        153,
+        17
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "CrowdInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "root_name",
+            "type": "string"
+          },
+          {
+            "name": "paid_fees",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CrowdfundingAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "raised_amount",
+            "type": "u64"
+          },
+          {
+            "name": "funding_root",
+            "type": "pubkey"
+          },
+          {
+            "name": "funding_target",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FundingAccountRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "account_lists",
+            "type": "bytes"
+          }
+        ]
+      }
+    }
+  ]
+}
