@@ -1,5 +1,5 @@
 {
-  "address": "EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9",
+  "address": "9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk",
   "metadata": {
     "name": "web3_name_service",
     "version": "0.1.0",
@@ -26,7 +26,26 @@
         },
         {
           "name": "record_account",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  82,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "data.owner"
+              }
+            ]
+          }
         },
         {
           "name": "system_program",
@@ -34,6 +53,7 @@
         },
         {
           "name": "payer",
+          "writable": true,
           "signer": true
         },
         {
@@ -46,7 +66,7 @@
           "name": "data",
           "type": {
             "defined": {
-              "name": "base_data"
+              "name": "BaseData"
             }
           }
         }
@@ -131,7 +151,8 @@
       ],
       "accounts": [
         {
-          "name": "name_account"
+          "name": "name_account",
+          "writable": true
         },
         {
           "name": "name_update_signer",
@@ -167,9 +188,57 @@
         84,
         81
       ]
+    },
+    {
+      "name": "RecordAccount",
+      "discriminator": [
+        228,
+        61,
+        107,
+        126,
+        20,
+        6,
+        79,
+        241
+      ]
     }
   ],
   "types": [
+    {
+      "name": "BaseData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "root",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "hased_name",
+            "type": "bytes"
+          },
+          {
+            "name": "ipfs",
+            "type": {
+              "option": {
+                "array": [
+                  "u8",
+                  46
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
     {
       "name": "NameAccount",
       "type": {
@@ -198,36 +267,17 @@
       }
     },
     {
-      "name": "base_data",
+      "name": "RecordAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "lamports",
-            "type": "u64"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "space",
-            "type": "u32"
-          },
-          {
-            "name": "owner",
+            "name": "root",
             "type": "pubkey"
           },
           {
-            "name": "ipfs",
-            "type": {
-              "option": {
-                "array": [
-                  "u8",
-                  46
-                ]
-              }
-            }
+            "name": "domains",
+            "type": "bytes"
           }
         ]
       }

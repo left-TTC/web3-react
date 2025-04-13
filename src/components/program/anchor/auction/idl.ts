@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/auction.json`.
  */
 export type Auction = {
-  "address": "C1z2SrwrPnN5WrhkXNoPnB6KBiCsp22bZJ2RtQfAMhuq",
+  "address": "4FvqywYKRiv1uhah5Y1s39PZqoX7qLVjMiyUhguSwbvv",
   "metadata": {
     "name": "auction",
     "version": "0.1.0",
@@ -14,34 +14,112 @@ export type Auction = {
   },
   "instructions": [
     {
-      "name": "checkFundingAccount",
+      "name": "addFunding",
       "discriminator": [
-        33,
-        17,
-        89,
-        199,
-        208,
-        99,
-        134,
-        155
+        26,
+        98,
+        31,
+        139,
+        109,
+        181,
+        179,
+        134
       ],
       "accounts": [
         {
+          "name": "vault",
+          "writable": true,
+          "address": "2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh"
+        },
+        {
           "name": "web3NameService",
-          "address": "EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9"
+          "address": "9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk"
+        },
+        {
+          "name": "crowdingAccountLists",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  101,
+                  98,
+                  51,
+                  32,
+                  97,
+                  117,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  32,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  32,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "allRootRecordAccount",
           "writable": true
         },
         {
+          "name": "fundraisingStateAccount"
+        },
+        {
           "name": "willCreateRoot",
           "writable": true
         },
         {
-          "name": "vault",
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "payer",
           "writable": true,
-          "address": "2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh"
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "add",
+          "type": "u64"
+        },
+        {
+          "name": "fundingName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "createFunding",
+      "discriminator": [
+        172,
+        83,
+        73,
+        92,
+        146,
+        70,
+        36,
+        140
+      ],
+      "accounts": [
+        {
+          "name": "willCreateRoot"
         },
         {
           "name": "fundraisingStateAccount",
@@ -89,13 +167,6 @@ export type Auction = {
               {
                 "kind": "const",
                 "value": [
-                  117,
-                  110,
-                  105,
-                  113,
-                  117,
-                  101,
-                  32,
                   119,
                   101,
                   98,
@@ -125,16 +196,17 @@ export type Auction = {
               }
             ]
           }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "address": "2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh"
         }
       ],
       "args": [
         {
-          "name": "data",
-          "type": {
-            "defined": {
-              "name": "crowdInfo"
-            }
-          }
+          "name": "rootName",
+          "type": "string"
         }
       ]
     }
@@ -168,22 +240,6 @@ export type Auction = {
     }
   ],
   "types": [
-    {
-      "name": "crowdInfo",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "rootName",
-            "type": "string"
-          },
-          {
-            "name": "paidFees",
-            "type": "u64"
-          }
-        ]
-      }
-    },
     {
       "name": "crowdfundingAccount",
       "type": {

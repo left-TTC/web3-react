@@ -2,7 +2,7 @@ import "../../style/components/domainIntroduce.css";
 import star from "../../assets/star.svg"
 import { calculateDomainPrice, getSeedAndKey, WEB3_NAME_SERVICE_ID } from "@/utils/aboutquery";
 import { Buffer } from "buffer";
-import { AccountInfo, Keypair} from "@solana/web3.js";
+import { AccountInfo, Keypair, PublicKey} from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import { getHashedName } from "@/utils/aboutquery"
 import { useAnchorWallet, useWallet,  } from '@solana/wallet-adapter-react'
@@ -14,6 +14,14 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui"
 interface introduceProps {
     domainName: string;
     domainInfo: AccountInfo<Buffer> | null;
+}
+
+export interface nameCreate {
+    name: string;
+    root: PublicKey;
+    hasedName: Buffer; 
+    ipfs: number[] | null;
+    owner: PublicKey;
 }
 
 const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
@@ -67,12 +75,12 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
             const ipfsHash = "QmPu4ZT2zPfyVY8CA2YBzqo9HfAV79nDuuf177tMrQK1py";
             const ipfsBytes = Buffer.from(ipfsHash, 'utf-8');
 
-            const baseData = {
-                lamports: lamports,
+            const baseData: nameCreate = {
                 name: domainName,
-                space: space,
-                owner: owner,
-                ipfs: ipfsBytes,
+                root: PublicKey.default,
+                hasedName: Buffer.from(getHashedName(domainName)),
+                ipfs: null,
+                owner: wallet.publicKey,
             }
 
             try {
@@ -80,7 +88,6 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
                     .create(baseData)
                     .accounts({
                         nameAccount: nameAccountKey,
-                        recordAccount: recordAccountKey,
                         payer: wallet.publicKey,
                         rootDomainOpt: null,
                     })

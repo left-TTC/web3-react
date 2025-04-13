@@ -14,7 +14,7 @@ export interface createRootInfo{
 
 
 export async function checkAuctionAccountLists(programId: PublicKey, connection: Connection){
-    const SEED = Buffer.from("unique web3 auction account list");
+    const SEED = Buffer.from("web3 auction account list");
 
     const [crowdingAccountPubkey, bump] = await PublicKey.findProgramAddressSync(
         [SEED],
@@ -88,18 +88,12 @@ export async function createRootAccount(
         const {nameAccountKey: auctionRecordAccount} = getSeedAndKey(
             nameService.programId, getHashedName(auction.programId.toBase58()), null);
     
-        const data = {
-            rootName: root,
-            paidFees: new BN(initBalance)
-        }
-    
         try{
             const tx = await auction.methods
-                .checkFundingAccount(data)
+                .createFunding(root)
                 .accounts({
                     willCreateRoot: willCreateRootAcount,
                     caller: wallet.publicKey,
-                    allRootRecordAccount: auctionRecordAccount,
                 })
                 .rpc()
                 console.log('Transaction successful:', tx);

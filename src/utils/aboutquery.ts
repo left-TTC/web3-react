@@ -6,7 +6,7 @@ const HASH_PREFIX = "WEB3 Name Service";
 
 export const DEVNET_URL = "https://api.devnet.solana.com";
 
-export const WEB3_NAME_SERVICE_ID = new PublicKey("EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9");
+export const WEB3_NAME_SERVICE_ID = new PublicKey("9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk");
 
 export const WEB3_ROOT = new PublicKey("52F3LuKrH19f8JATdXn1w9F3kFQceK3n5ticQmbjVs78");
 

@@ -3,6 +3,7 @@ import { isCheckDomain, queryDomain, WEB3_NAME_SERVICE_ID, WEB3_ROOT} from "../.
 import { useNavigate } from "react-router-dom";
 
 import "../../style/components/query.css"
+import { useNameService } from "../program/name-service-provider";
 
 interface QueryProps {
     initValue?: string; 
@@ -12,6 +13,7 @@ const Query = ({initValue}: QueryProps) => {
     const [queryValue, setQueryValue] = useState(initValue || "");
     const [domainClass, setDomainClass] = useState("");
     const navi = useNavigate();
+    const {nameProgram} = useNameService();
 
     useEffect(() => {
         setQueryValue(queryValue); 
@@ -32,16 +34,19 @@ const Query = ({initValue}: QueryProps) => {
         }else{
             rootOpt = null;
         }
-        const queryResult = await queryDomain(
-            domainArray[0], WEB3_NAME_SERVICE_ID, rootOpt
-        );
-
-        navi("/search", {
-            state: {
-                queryResult: queryResult,
-                queryValue: queryValue,
-            }
-        })
+        
+        if (nameProgram){
+            const queryResult = await queryDomain(
+                domainArray[0], WEB3_NAME_SERVICE_ID, rootOpt
+            );
+    
+            navi("/search", {
+                state: {
+                    queryResult: queryResult,
+                    queryValue: queryValue,
+                }
+            })
+        }
 
     };
 

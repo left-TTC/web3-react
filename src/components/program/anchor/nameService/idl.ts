@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/web3_name_service.json`.
  */
 export type Web3NameService = {
-  "address": "EWVnJDmu8CRLPyuHQqxgR1oFB8WhXBXRENRr1skQZxA9",
+  "address": "9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk",
   "metadata": {
     "name": "web3NameService",
     "version": "0.1.0",
@@ -32,7 +32,26 @@ export type Web3NameService = {
         },
         {
           "name": "recordAccount",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  82,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "data.owner"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
@@ -40,6 +59,7 @@ export type Web3NameService = {
         },
         {
           "name": "payer",
+          "writable": true,
           "signer": true
         },
         {
@@ -137,7 +157,8 @@ export type Web3NameService = {
       ],
       "accounts": [
         {
-          "name": "nameAccount"
+          "name": "nameAccount",
+          "writable": true
         },
         {
           "name": "nameUpdateSigner",
@@ -173,9 +194,57 @@ export type Web3NameService = {
         84,
         81
       ]
+    },
+    {
+      "name": "recordAccount",
+      "discriminator": [
+        228,
+        61,
+        107,
+        126,
+        20,
+        6,
+        79,
+        241
+      ]
     }
   ],
   "types": [
+    {
+      "name": "baseData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "root",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "hasedName",
+            "type": "bytes"
+          },
+          {
+            "name": "ipfs",
+            "type": {
+              "option": {
+                "array": [
+                  "u8",
+                  46
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
     {
       "name": "nameAccount",
       "type": {
@@ -204,36 +273,17 @@ export type Web3NameService = {
       }
     },
     {
-      "name": "baseData",
+      "name": "recordAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "lamports",
-            "type": "u64"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "space",
-            "type": "u32"
-          },
-          {
-            "name": "owner",
+            "name": "root",
             "type": "pubkey"
           },
           {
-            "name": "ipfs",
-            "type": {
-              "option": {
-                "array": [
-                  "u8",
-                  46
-                ]
-              }
-            }
+            "name": "domains",
+            "type": "bytes"
           }
         ]
       }
