@@ -2,7 +2,7 @@
 
 
 
-import "../../style/components/auctiondomain.css"
+import "../../style/components/auction/auctiondomain.css"
 
 
 export const AuctionDomains = () => {

@@ -6,7 +6,7 @@ const HASH_PREFIX = "WEB3 Name Service";
 
 export const DEVNET_URL = "https://api.devnet.solana.com";
 
-export const WEB3_NAME_SERVICE_ID = new PublicKey("9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk");
+export const WEB3_NAME_SERVICE_ID = new PublicKey("7jCvwtaAUda4SMYh24uuAS8nCYxDaKv5EuaP3qvXJYPs");
 
 export const WEB3_ROOT = new PublicKey("52F3LuKrH19f8JATdXn1w9F3kFQceK3n5ticQmbjVs78");
 
@@ -40,6 +40,26 @@ export function getSeedAndKey(
     seeds = new Uint8Array([...seeds, bump]);
 
     return {nameAccountKey, seeds};
+}
+
+export function getUsrRecordAccount(
+    programId: PublicKey, ownerKey: PublicKey, rootOpt: null | PublicKey){
+
+    const rootSeed = rootOpt || PublicKey.default;
+
+    let seeds = new Uint8Array([...ownerKey.toBytes()]);
+
+    seeds = new Uint8Array([...seeds, ...rootSeed.toBytes()]);
+
+    const seedChunks = [];
+    for (let i = 0; i < seeds.length; i += 32) {
+        const chunk = seeds.slice(i, i + 32);
+        seedChunks.push(chunk);
+    }
+
+    const [address, _] = PublicKey.findProgramAddressSync(seedChunks, programId);
+
+    return address;
 }
 
 

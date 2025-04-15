@@ -1,59 +1,10 @@
-.show{
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
+
+
+.two{
+    margin-top: 60px;
 }
 
-.showcrowding{
-    display: flex;
-    justify-content: center;
-    height: 300px;
-    border: 3px solid white;
-}
-
-.showcrowding p{
-    color: white;
-}
-
-.createCrowd{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 80px;
-    background-color: blueviolet;
-    padding: 10px;
-    align-items: center;
-    border-radius: 15px;
-    box-shadow: 0px 0px 10px blueviolet;
-}
-
-.wordBox{
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-}
-
-.wordBox h1{
-    font-weight: 600;
-    font-size: 25px;
-    color: white;
-}
-
-.wordBox h2{
-    color: white;
-    font-size: 20px;
-}
-
-.buttonBox{
-    background-color: white;
-    width: 13%;
-    height: 50%;
-    margin-right: 30px;
-    align-items: center;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px white;
-}
-
-.createRoot{
+.addmodal {
     position: absolute;
     background: rgba(0, 0, 0, 0.5);
     top: 50%;
@@ -65,23 +16,109 @@
     z-index: 30px;
     backdrop-filter: blur(10px);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.createBox{
-    height: 400px;
-    width: 800px;
-    background-color: white;
+.addBlock{
+    height: 300px;
+    width: 540px;
+    background-color: rgb(76, 58, 106);
     border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0px 0px 10px white;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
 }
 
-.createRootInput{
-
+.title{
+    display: flex;
+    flex-direction: row;
+    margin-right: 30px;
 }
+
+.title h1 {
+    font-size: 18px;
+    color: white;
+    margin-top: 4px;
+}
+
+.title h2 {
+    font-size: 23px;
+    margin-left: 30px;
+    font-weight: 600;
+    color: white;
+}
+
+.amountInput{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.amountInputbox{
+    width: 80%;
+    height: 40px;
+    border-radius: 10px;
+    padding-left: 20px;
+}
+
+.amountSelection{
+    background-color: #3498db;
+    height: 40px;
+    width: 16%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+}
+
+.amountOptions{
+    position: fixed;
+    margin-top: 210px;
+    background-color: rgb(28, 27, 27);
+    z-index: 10px;
+    margin-right: 110px;
+    opacity: 0.7;
+    border-radius: 20px;
+}
+
+.amountButtons{
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 两列布局 */
+    gap: 10px;
+}
+
+.amountButton{
+    width: 80px;
+    height: 32px;
+    border-radius: 7px;
+    border: 2px solid white;
+    font-size: 12px;
+}
+
+.addbutton{
+    height: 45px;
+    margin-top: 7%;
+    width: 80%;
+    border-radius: 10px;
+}
+
+.confirm {
+    background-color: #3498db;
+}
+
+.cancle{
+    background-color: white;
+}
+
 
 .loader {
     border: 4px solid #f3f3f3; 

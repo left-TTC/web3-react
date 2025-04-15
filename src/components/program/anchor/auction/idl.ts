@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/auction.json`.
  */
 export type Auction = {
-  "address": "4FvqywYKRiv1uhah5Y1s39PZqoX7qLVjMiyUhguSwbvv",
+  "address": "9avSzeSypv1UnYMJX5Rjp9NrCJGCqxhPwPtaG9mpvcyz",
   "metadata": {
     "name": "auction",
     "version": "0.1.0",
@@ -33,7 +33,7 @@ export type Auction = {
         },
         {
           "name": "web3NameService",
-          "address": "9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk"
+          "address": "7jCvwtaAUda4SMYh24uuAS8nCYxDaKv5EuaP3qvXJYPs"
         },
         {
           "name": "crowdingAccountLists",
@@ -78,7 +78,33 @@ export type Auction = {
           "writable": true
         },
         {
-          "name": "fundraisingStateAccount"
+          "name": "fundraisingStateAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  101,
+                  98,
+                  51,
+                  32,
+                  65,
+                  117,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "willCreateRoot"
+              }
+            ]
+          }
         },
         {
           "name": "willCreateRoot",
@@ -122,6 +148,11 @@ export type Auction = {
           "name": "willCreateRoot"
         },
         {
+          "name": "caller",
+          "writable": true,
+          "signer": true
+        },
+        {
           "name": "fundraisingStateAccount",
           "writable": true,
           "pda": {
@@ -149,11 +180,6 @@ export type Auction = {
               }
             ]
           }
-        },
-        {
-          "name": "caller",
-          "writable": true,
-          "signer": true
         },
         {
           "name": "systemProgram",

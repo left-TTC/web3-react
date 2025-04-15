@@ -1,5 +1,5 @@
 {
-  "address": "4FvqywYKRiv1uhah5Y1s39PZqoX7qLVjMiyUhguSwbvv",
+  "address": "9avSzeSypv1UnYMJX5Rjp9NrCJGCqxhPwPtaG9mpvcyz",
   "metadata": {
     "name": "auction",
     "version": "0.1.0",
@@ -27,7 +27,7 @@
         },
         {
           "name": "web3_name_service",
-          "address": "9WykwriEQGT1RjzJvAa7a31AQ8ZtHGnvmXRaeQ47oQLk"
+          "address": "7jCvwtaAUda4SMYh24uuAS8nCYxDaKv5EuaP3qvXJYPs"
         },
         {
           "name": "crowding_account_lists",
@@ -72,7 +72,33 @@
           "writable": true
         },
         {
-          "name": "fundraising_state_account"
+          "name": "fundraising_state_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  101,
+                  98,
+                  51,
+                  32,
+                  65,
+                  117,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "will_create_root"
+              }
+            ]
+          }
         },
         {
           "name": "will_create_root",
@@ -116,6 +142,11 @@
           "name": "will_create_root"
         },
         {
+          "name": "caller",
+          "writable": true,
+          "signer": true
+        },
+        {
           "name": "fundraising_state_account",
           "writable": true,
           "pda": {
@@ -143,11 +174,6 @@
               }
             ]
           }
-        },
-        {
-          "name": "caller",
-          "writable": true,
-          "signer": true
         },
         {
           "name": "system_program",

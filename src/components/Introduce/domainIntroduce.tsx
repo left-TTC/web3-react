@@ -63,15 +63,6 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
             console.log(nameAccountKey.toBase58());
             console.log("payer:", wallet.publicKey.toBase58());
 
-            // Define lamports and space for the domain
-            const lamports = new BN(10000000);
-            const space = 0; 
-            const owner = wallet.publicKey;
-
-            const {nameAccountKey: recordAccountKey} = getSeedAndKey(
-                nameProgram.programId, getHashedName(owner.toBase58()), null
-            )
-
             const ipfsHash = "QmPu4ZT2zPfyVY8CA2YBzqo9HfAV79nDuuf177tMrQK1py";
             const ipfsBytes = Buffer.from(ipfsHash, 'utf-8');
 

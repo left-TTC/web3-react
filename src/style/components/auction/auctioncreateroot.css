@@ -1,0 +1,89 @@
+.show{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.showcrowding{
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    border: 3px solid white;
+}
+
+.showcrowding p{
+    color: white;
+}
+
+.createCrowd{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 80px;
+    background-color: blueviolet;
+    padding: 10px;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px blueviolet;
+}
+
+.wordBox{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.wordBox h1{
+    font-weight: 600;
+    font-size: 25px;
+    color: white;
+}
+
+.wordBox h2{
+    color: white;
+    font-size: 20px;
+}
+
+.buttonBox{
+    background-color: white;
+    width: 13%;
+    height: 50%;
+    margin-right: 30px;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px white;
+}
+
+.createRoot{
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
+    z-index: 30px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.createBox{
+    height: 400px;
+    width: 800px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0px 0px 10px white;
+}
+
+.createRootInput{
+
+}
+
+
+
+
+

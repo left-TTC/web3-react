@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js"
-import { decodeNameRecordHeader, DEVNET_URL, getHashedName, getSeedAndKey, WEB3_NAME_SERVICE_ID } from "./aboutquery"
+import { decodeNameRecordHeader, DEVNET_URL, getHashedName, getSeedAndKey, getUsrRecordAccount, WEB3_NAME_SERVICE_ID } from "./aboutquery"
 import { AccountInfo } from "@solana/web3.js";
 
 
@@ -10,8 +10,8 @@ export async function findUserInfo(
     connection: Connection){
     
     try{
-        const {nameAccountKey: userRecordKey} = getSeedAndKey(
-            nameService, getHashedName(userKey.toBase58()), root
+        const userRecordKey = getUsrRecordAccount(
+            nameService, userKey, root
         )
         console.log(userRecordKey.toBase58());
         console.log("finding:", userKey.toBase58());
