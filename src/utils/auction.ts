@@ -25,6 +25,7 @@ export async function checkAuctionAccountLists(programId: PublicKey, connection:
     try{
         if (accountInfo){
             const data= decodeAuctionList(accountInfo.data);
+            console.log("original data:", data);
             return data;
         }else{
             throw new Error("can't find auction record list");

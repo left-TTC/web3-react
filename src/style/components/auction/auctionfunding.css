@@ -92,7 +92,7 @@
 .amountButtons{
     padding: 16px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 两列布局 */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 10px;
 }
 

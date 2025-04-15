@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/auction.json`.
  */
 export type Auction = {
-  "address": "9avSzeSypv1UnYMJX5Rjp9NrCJGCqxhPwPtaG9mpvcyz",
+  "address": "2UFgq1J3PJFNMbFGiDF7BvX7HdBVwuu16nVz68gk1ZAW",
   "metadata": {
     "name": "auction",
     "version": "0.1.0",
