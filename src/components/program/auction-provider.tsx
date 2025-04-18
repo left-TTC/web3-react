@@ -7,7 +7,6 @@ import * as anchor from "@coral-xyz/anchor";
 
 export interface AuctionProviderContext{
     auctionProgram: anchor.Program<Auction> | null,
-
 }
 
 const AcutionContext = React.createContext<AuctionProviderContext>({

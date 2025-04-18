@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/auction.json`.
  */
 export type Auction = {
-  "address": "2UFgq1J3PJFNMbFGiDF7BvX7HdBVwuu16nVz68gk1ZAW",
+  "address": "CSYfnHzWsnvqnixF3WvF5eua7hxC8q1przzapqCauLUA",
   "metadata": {
     "name": "auction",
     "version": "0.1.0",
@@ -33,7 +33,7 @@ export type Auction = {
         },
         {
           "name": "web3NameService",
-          "address": "7jCvwtaAUda4SMYh24uuAS8nCYxDaKv5EuaP3qvXJYPs"
+          "address": "77tWhvBTKvZVHudKKLV9EpzwFoTrGAJL9gwuNUA9MaRY"
         },
         {
           "name": "crowdingAccountLists",
@@ -187,7 +187,6 @@ export type Auction = {
         },
         {
           "name": "crowdingAccountLists",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -233,6 +232,74 @@ export type Auction = {
         {
           "name": "rootName",
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "listRealloc",
+      "discriminator": [
+        100,
+        191,
+        145,
+        145,
+        233,
+        33,
+        20,
+        74
+      ],
+      "accounts": [
+        {
+          "name": "crowdingAccountLists",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  101,
+                  98,
+                  51,
+                  32,
+                  97,
+                  117,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  32,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  32,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "magnification",
+          "type": "u8"
         }
       ]
     }

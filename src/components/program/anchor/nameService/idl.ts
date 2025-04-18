@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/web3_name_service.json`.
  */
 export type Web3NameService = {
-  "address": "7jCvwtaAUda4SMYh24uuAS8nCYxDaKv5EuaP3qvXJYPs",
+  "address": "77tWhvBTKvZVHudKKLV9EpzwFoTrGAJL9gwuNUA9MaRY",
   "metadata": {
     "name": "web3NameService",
     "version": "0.1.0",

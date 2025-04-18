@@ -6,14 +6,6 @@ import { useNameService } from "../program/name-service-provider";
 import { createRootAccount } from "@/utils/auction";
 
 
-
-interface crowdingRoot{
-    domainName: string,
-    nowRaised: number,
-    targetAmount: number,
-}
-
-
 const AuctionCreateRoot = () => {
     
     const { auctionProgram } = useAuctionService();
@@ -43,9 +35,9 @@ const AuctionCreateRoot = () => {
         setShowCreateRoot(false);
     };
 
-    const clinkToCreate = async (wantCreateRoot: string, initBalance: string) => {
+    const clinkToCreate = async (wantCreateRoot: string) => {
         try {
-            await createRootAccount(wantCreateRoot, auctionProgram, wallet, nameProgram);
+            await createRootAccount(wantCreateRoot, auctionProgram, wallet, nameProgram, connection);
         } catch (err) {
             console.error("Error creating root:", err);
         }
@@ -54,7 +46,6 @@ const AuctionCreateRoot = () => {
     };
 
     const [wantCreateRootName, setWantCreateRoorName] = useState("");
-    const [fundAmount, setFundAmount] = useState("");
 
     const createRoot = (
         <div className="createRoot">
@@ -66,13 +57,7 @@ const AuctionCreateRoot = () => {
                     onChange={(e) => setWantCreateRoorName(e.target.value)}
                     placeholder="what you want"
                 />
-                <input
-                    className="initBalanceInput"
-                    type="text"
-                    value={fundAmount}
-                    onChange={(e) => setFundAmount(e.target.value)}
-                />
-                <button className="createButton" onClick={() => clinkToCreate(wantCreateRootName, fundAmount)}>
+                <button className="createButton" onClick={() => clinkToCreate(wantCreateRootName)}>
                     <h1>create</h1>
                 </button>
             </div>

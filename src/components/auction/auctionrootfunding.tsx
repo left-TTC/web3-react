@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuctionService } from "../program/auction-provider";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useNameService } from "../program/name-service-provider";
-import { addFundingAmount, checkAuctionAccountLists, checkFundingStateAccount, createRootInfo, decodeFundingRootData } from "@/utils/auction";
+import { addFundingAmount, checkAuctionAccountLists, checkFundingStateAccount, createRootInfo, decodeAuctionList, decodeFundingRootData } from "@/utils/auction";
 import { getHashedName, getSeedAndKey } from "@/utils/aboutquery";
 import { PublicKey } from "@solana/web3.js";
 
@@ -25,8 +25,10 @@ const FundingRootInfo = () => {
         const fetchData = async () => {
             if (auctionProgram && connection) {
                 try {
-                    const newLists = await checkAuctionAccountLists(auctionProgram.programId, connection);
-                    if (newLists) {
+                    const listAccountInfo = await checkAuctionAccountLists(auctionProgram.programId, connection);
+                    
+                    if (listAccountInfo) {
+                        const newLists = decodeAuctionList(listAccountInfo)
                         setCreatingLists(newLists.slice(0, newLists.length - 1));
                     }
                 } catch (error) {
@@ -68,7 +70,7 @@ const FundingRootInfo = () => {
                         const fundingRootStateAccount = await checkFundingStateAccount(auctionProgram.programId, willCreateRoot);
                         if (fundingRootStateAccount){
                             const fundingRootAccountInfo = await connection.getAccountInfo(fundingRootStateAccount);
-
+                            
                             if (fundingRootAccountInfo) {
                                 const data = decodeFundingRootData(fundingRootAccountInfo.data);
                                 setChecingInfo((prevState) => ({
@@ -101,6 +103,8 @@ const FundingRootInfo = () => {
             setAddingDomain(addingDomain);
             setAddingDomainInfo(addingDomainInfo)
         };
+
+        
 
         return (
             <div className="crowdingLists">
