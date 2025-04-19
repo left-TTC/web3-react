@@ -8,6 +8,7 @@ import { WalletButton } from '../solana/solana-provider'
 
 import "@styles/components/nav.css";
 import "@styles/global.css"
+import { RootDomainChooser } from '../rootenvironment/rootchooser'
 
 export function UiLayout({ children, links }: { children: ReactNode; links: { label: string; path: string }[] }) {
   const pathname = useLocation().pathname
@@ -30,6 +31,9 @@ export function UiLayout({ children, links }: { children: ReactNode; links: { la
               </li>
             ))}
           </ul>
+        </div>
+        <div className='rootchooser'>
+          <RootDomainChooser />
         </div>
         <div className="flex-none space-x-2">
           <WalletButton />

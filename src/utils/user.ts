@@ -35,53 +35,44 @@ export function getUserDomain(
     const userRecord = decodeRecordHeader(accountData);
 
     if (userRecord.root = usr.toBase58()){
-        const domains = cutDomains(userRecord.domains)
-        console.log(domains);
-        return domains
+        console.log(userRecord.domains);
+        return userRecord.domains
     }else{
         throw new Error("Invalid")
     }
 }
 
-function cutDomains(domainStr: string){
-    const lastDotIndex = domainStr.lastIndexOf(".");
-
-    if(lastDotIndex){
-        const substringWithoutZeros = domainStr.substring(0, lastDotIndex).replace(/0+$/, "");
-        const result = substringWithoutZeros.split(".");
-        return result
-    }else{
-        throw new Error("Invalid domain string");
-    }
-}
 
 interface RecordHeader {
     root: string,
-    domains: string,
+    domains: string[],
 }
 
-function decodeRecordHeader(data: Uint8Array): RecordHeader{
+export function decodeRecordHeader(data: Uint8Array): RecordHeader{
 
-    const DISCRIMINATOR = 8;
-    const PUBKEY_LENGTH = 32;
-    const VEC_LENGTH_PREFIX = 4;
-
-    const length = data.byteLength;
-    console.log(length)
+    const DISCRIMINATOR = 8;   
+    const PUBKEY_LENGTH = 32; 
+    const VEC_LENGTH_PREFIX = 4; 
 
     let offset = DISCRIMINATOR;
 
     const root = new PublicKey(data.slice(offset, offset + PUBKEY_LENGTH)).toBase58();
     offset += PUBKEY_LENGTH;
 
+    const domainsDataLength = new DataView(
+        data.slice(offset, offset + VEC_LENGTH_PREFIX).buffer
+    ).getUint32(0, true);
     offset += VEC_LENGTH_PREFIX;
 
-    const domain = data.slice(offset, length);
-    const domains = domain.toString();
+    const domainsBytes = data.slice(offset, offset + domainsDataLength);
+
+    const textDecoder = new TextDecoder("utf-8");
+    const domainsStr = textDecoder.decode(domainsBytes);
+    const domains = domainsStr.split('.').filter(Boolean); 
 
     return {
         root,
-        domains, 
+        domains
     };
 }
 

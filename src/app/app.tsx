@@ -3,6 +3,7 @@ import { ClusterProvider } from '../components/cluster/cluster-data-access'
 import { SolanaProvider } from '../components/solana/solana-provider'
 import { AppRoutes } from './app-routes'
 import { ProgramContextProvider } from '@/components/program/program-provider'
+import { RootDomainProvider } from '@/components/rootenvironment/rootenvironmentprovider'
 
 //what is queryclient?
 //manage all the cache of all query and change request
@@ -17,7 +18,9 @@ export function App() {
       <ClusterProvider>
         <SolanaProvider>
           <ProgramContextProvider>
-            <AppRoutes />
+            <RootDomainProvider>
+              <AppRoutes />
+            </RootDomainProvider>
           </ProgramContextProvider>
         </SolanaProvider>
       </ClusterProvider>
