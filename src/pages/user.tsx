@@ -1,9 +1,9 @@
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 import "@/style/pages/user.css"
-import { findUserInfo } from "@/utils/user";
+// import { findUserInfo } from "@/utils/user";
 import { useNameService } from "@/components/program/name-service-provider";
 import DomainBlock from "@/components/userpage/domiansshow";
 import { updateIPFS } from "@/utils/updatedomain";
@@ -15,17 +15,17 @@ export interface revisingDomainInfo{
 }
 
 export default function Userpage(){
-    const { publicKey, connected, disconnect, connect } = useWallet();
-    const [ isWalletConnected, setIsWalletConnected] = useState(false);
+    const { publicKey, connected} = useWallet();
+    // const [ isWalletConnected, setIsWalletConnected] = useState(false);
     const [ hasPrompted, setHasPrompted] = useState(false);
     const { setVisible: setModalVisible } = useWalletModal();
     const wallet = useAnchorWallet();
     const { nameProgram } = useNameService();
     const { connection } = useConnection();
 
-    useEffect(() => {
-        setIsWalletConnected(connected);
-    }, [connection]);
+    // useEffect(() => {
+    //     setIsWalletConnected(connected);
+    // }, [connection]);
 
     let account;
     if (publicKey){

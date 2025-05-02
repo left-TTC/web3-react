@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { ReactNode, useEffect, useState } from "react";
+import React from "react";
+import {  useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { fetchAccountIpfs, findUserInfo, getUserDomain } from "@/utils/user";
 import { WEB3_NAME_SERVICE_ID } from "@/utils/aboutquery";
@@ -8,8 +8,8 @@ import copy from "../../assets/copy.png";
 import revise from "../../assets/revise.png";
 
 import "@/style/components/domainsshow.css"
-import { useNameService } from "../program/name-service-provider";
-import { useAnchorWallet } from "@solana/wallet-adapter-react";
+// import { useNameService } from "../program/name-service-provider";
+// import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { revisingDomainInfo } from "@/pages/user";
 
 //the damain values
@@ -28,7 +28,7 @@ export interface DomainBlockProps {
 const DomainBlock: React.FC<DomainBlockProps> = ({ ownerKey, connection, onRevise }) => {
     const [userKey, setUsrKey] = useState(ownerKey);
     const [domains, setDomains] = useState<string[]>([]);
-    const [roots, setRoots] = useState<string[]>(["web", "test"]);
+    const [roots] = useState<string[]>(["web", "test"]);
     const [root, setRoot] = useState<string | null>(roots[1]);
     const [ifShowModal, setIfShowModal] = useState(false);
 

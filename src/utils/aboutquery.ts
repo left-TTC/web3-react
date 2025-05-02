@@ -1,6 +1,6 @@
 import { sha256 } from 'js-sha256';
 import { Buffer } from 'buffer'; // To handle binary data in Node.js
-import { PublicKey, Connection, Keypair } from '@solana/web3.js'; 
+import { PublicKey, Connection} from '@solana/web3.js'; 
 
 const HASH_PREFIX = "WEB3 Name Service";
 
@@ -100,7 +100,7 @@ export function isCheckDomain(){
 }
 
 
-export function calculateDomainPrice(domain: string){
+export function calculateDomainPrice(){
     return 20
 }
 

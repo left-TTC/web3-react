@@ -4,7 +4,7 @@ import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useNameService } from "../program/name-service-provider";
 import { addFundingAmount, checkAuctionAccountLists, checkFundingStateAccount, createRootInfo, decodeAuctionList, decodeFundingRootData } from "@/utils/auction";
 import { getHashedName, getSeedAndKey } from "@/utils/aboutquery";
-import { PublicKey } from "@solana/web3.js";
+// import { PublicKey } from "@solana/web3.js";
 
 import previous from "../../assets/previous.png";
 import next from "../../assets/next.png";
@@ -168,6 +168,7 @@ const FundingRootInfo = () => {
         const handleConfirmAddAmount = async (addingDomain: string) => {
             if (willAddAmount > 0){
                 const tx = await addFundingAmount(auctionProgram, wallet, nameProgram, willAddAmount, addingDomain)
+                console.log(tx)
             }
             console.log("add")
             closeAddModal();

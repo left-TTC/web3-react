@@ -12,8 +12,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@bonfida/spl-name-service": "^3.0.10",
     "@coral-xyz/anchor": "^0.31.0",
-    "@solana/spl-token": "0.4.12",
+    "@noble/hashes": "^1.8.0",
+    "@solana/spl-token": "^0.4.13",
     "@solana/wallet-adapter-base": "0.9.24",
     "@solana/wallet-adapter-react": "0.15.36",
     "@solana/wallet-adapter-react-ui": "0.9.36",

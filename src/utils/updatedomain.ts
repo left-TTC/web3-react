@@ -12,7 +12,7 @@ export async function updateIPFS(
     usrInfo: revisingDomainInfo,
 ){
     //Confirm ownership
-    const root = usrInfo.root;
+    // const root = usrInfo.root;
     const changeDomain = usrInfo.name;
 
     try{

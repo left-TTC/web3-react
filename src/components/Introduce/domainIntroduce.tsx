@@ -2,8 +2,8 @@ import "../../style/components/domainIntroduce.css";
 import star from "../../assets/star.svg"
 import { calculateDomainPrice, getSeedAndKey, WEB3_NAME_SERVICE_ID } from "@/utils/aboutquery";
 import { Buffer } from "buffer";
-import { AccountInfo, Keypair, PublicKey} from "@solana/web3.js";
-import { BN } from "@coral-xyz/anchor";
+import { AccountInfo, PublicKey} from "@solana/web3.js";
+// import { BN } from "@coral-xyz/anchor";
 import { getHashedName } from "@/utils/aboutquery"
 import { useAnchorWallet, useWallet,  } from '@solana/wallet-adapter-react'
 import { useNameService } from "../program/name-service-provider";
@@ -30,7 +30,7 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
     let rightContent;
 
     // Get price and get a complete domain name
-    const price = calculateDomainPrice(domainName);
+    const price = calculateDomainPrice();
     const showDomainName = completeName(domainName);
 
     // Get values from context
@@ -41,7 +41,7 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
 
     // Prepare domain class and other necessary values
     const hashedNameUint8 = getHashedName(domainName);
-    const hashedName = Buffer.from(hashedNameUint8);
+    // const hashedName = Buffer.from(hashedNameUint8);
 
     const { nameAccountKey } = getSeedAndKey(
         WEB3_NAME_SERVICE_ID, hashedNameUint8, null
@@ -63,8 +63,8 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
             console.log(nameAccountKey.toBase58());
             console.log("payer:", wallet.publicKey.toBase58());
 
-            const ipfsHash = "QmPu4ZT2zPfyVY8CA2YBzqo9HfAV79nDuuf177tMrQK1py";
-            const ipfsBytes = Buffer.from(ipfsHash, 'utf-8');
+            // const ipfsHash = "QmPu4ZT2zPfyVY8CA2YBzqo9HfAV79nDuuf177tMrQK1py";
+            // const ipfsBytes = Buffer.from(ipfsHash, 'utf-8');
 
             const baseData: nameCreate = {
                 name: domainName,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { useRootDomain } from "./rootenvironmentprovider";
 import "@/style/pages/rootchooser.css"
 

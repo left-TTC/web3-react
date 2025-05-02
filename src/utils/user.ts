@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from "@solana/web3.js"
-import { decodeNameRecordHeader, DEVNET_URL, getHashedName, getSeedAndKey, getUsrRecordAccount, WEB3_NAME_SERVICE_ID } from "./aboutquery"
-import { AccountInfo } from "@solana/web3.js";
+import { decodeNameRecordHeader, getHashedName, getSeedAndKey, getUsrRecordAccount, WEB3_NAME_SERVICE_ID } from "./aboutquery"
+// import { AccountInfo } from "@solana/web3.js";
 
 
 export async function findUserInfo(

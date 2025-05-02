@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getHashedName, getSeedAndKey, isCheckDomain, queryDomain, WEB3_NAME_SERVICE_ID, WEB3_ROOT} from "../../utils/aboutquery"
+import { getHashedName, getSeedAndKey,  queryDomain,} from "../../utils/aboutquery"
 import { useNavigate } from "react-router-dom";
 
 import "../../style/components/query.css"

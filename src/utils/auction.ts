@@ -4,7 +4,7 @@ import { BN, Program } from "@coral-xyz/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getHashedName, getSeedAndKey, getUsrRecordAccount } from "./aboutquery";
-import { buffer } from "stream/consumers";
+// import { buffer } from "stream/consumers";
 
 
 export interface createRootInfo{
@@ -16,7 +16,7 @@ export interface createRootInfo{
 export async function getRecordListsPda(programId: PublicKey){
     const SEED = Buffer.from("web3 auction account list");
 
-    const [crowdingAccountPubkey, bump] = await PublicKey.findProgramAddressSync(
+    const [crowdingAccountPubkey, _] = await PublicKey.findProgramAddressSync(
         [SEED],
         programId,
     );

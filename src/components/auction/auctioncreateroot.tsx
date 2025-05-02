@@ -1,7 +1,7 @@
 import "../../style/components/auction/auctioncreateroot.css"
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useAuctionService } from "../program/auction-provider";
-import { AnchorWallet, useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
+import {  useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useNameService } from "../program/name-service-provider";
 import { createRootAccount } from "@/utils/auction";
 
