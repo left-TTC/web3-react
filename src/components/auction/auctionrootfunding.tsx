@@ -1,51 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { useAuctionService } from "../program/auction-provider";
-import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
-import { useNameService } from "../program/name-service-provider";
-import { addFundingAmount, checkAuctionAccountLists, checkFundingStateAccount, createRootInfo, decodeAuctionList, decodeFundingRootData } from "@/utils/auction";
-import { getHashedName, getSeedAndKey } from "@/utils/aboutquery";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 // import { PublicKey } from "@solana/web3.js";
 
 import previous from "../../assets/previous.png";
 import next from "../../assets/next.png";
 
 import "../../style/components/auction/auctionfunding.css"
+import { creatingRoot, findCreatingRootDomains } from "@/utils/auction/findCreatingRootDomain";
+import { CREATE_ROOT_FEE } from "@/utils/constants";
+import { Transaction } from "@solana/web3.js";
 
 const FundingRootInfo = () => {
-    const [creatingLists, setCreatingLists] = useState<string[]>([]);
-    const [addingDomain, setAddingDomain] = useState("");
     const [showAddAmountModal, setShowAddAmountModal] = useState(false);
 
-    const { auctionProgram } = useAuctionService();
     const { connection } = useConnection();
-    const wallet = useAnchorWallet();
-    const { nameProgram } = useNameService();
+    const {publicKey: wallet ,signTransaction} = useWallet();
+
+    const [creatingLists, setCreatingLists] = useState<creatingRoot[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (auctionProgram && connection) {
-                try {
-                    const listAccountInfo = await checkAuctionAccountLists(auctionProgram.programId, connection);
-                    
-                    if (listAccountInfo) {
-                        const newLists = decodeAuctionList(listAccountInfo)
-                        setCreatingLists(newLists.slice(0, newLists.length - 1));
-                    }
-                } catch (error) {
-                    console.error("Error fetching auction account lists:", error);
-                }
-            }
+            setCreatingLists(await findCreatingRootDomains(connection));
         };
 
         fetchData();
-    }, [auctionProgram, connection]);
+    }, [connection]);
 
-    const [addingDomainInfo, setAddingDomainInfo] = useState<createRootInfo | null>(null);
+    const [addingRoot, setAddingRoot] = useState<creatingRoot | null>(null);
 
-    const CrowdingLists = ({ creatingLists }: { creatingLists: string[] }) => {
+    const addAmount = (addingroot: creatingRoot) => {
+        setAddingRoot(addingroot);
+        setShowAddAmountModal(true)
+    }
+
+    const CrowdingLists = ({ creatingLists }: { creatingLists: creatingRoot[] }) => {
         const [currentIndex, setCurrentIndex] = useState(0);
-        const [checingInfo, setChecingInfo] = useState<{ [creatingRoot: string]: createRootInfo | null }>({});
-        const currentDomain = creatingLists[currentIndex];
+        const [currentRoot, setCurrentRoot] = useState<creatingRoot>(creatingLists[0])
+
+        useEffect(() => {
+            setCurrentRoot(creatingLists[currentIndex])
+        }, [currentIndex])
 
         const nextItem = () => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % creatingLists.length);
@@ -57,73 +51,30 @@ const FundingRootInfo = () => {
             );
         };
 
-        useEffect(() => {
-            const fetchRootInfo = async () => {
-                if (connection && nameProgram && auctionProgram) {
-                    try {
-                        const { nameAccountKey: willCreateRoot } = getSeedAndKey(
-                            nameProgram.programId,
-                            getHashedName(currentDomain),
-                            null
-                        );
-                        
-                        const fundingRootStateAccount = await checkFundingStateAccount(auctionProgram.programId, willCreateRoot);
-                        if (fundingRootStateAccount){
-                            const fundingRootAccountInfo = await connection.getAccountInfo(fundingRootStateAccount);
-                            
-                            if (fundingRootAccountInfo) {
-                                const data = decodeFundingRootData(fundingRootAccountInfo.data);
-                                setChecingInfo((prevState) => ({
-                                    ...prevState,
-                                    [currentDomain]: data,
-                                }));
-                            } else {
-                                throw new Error("no this accountInfo");
-                            }
-                        }
-                    } catch (err) {
-                        console.error(err);
-                    }
-                }
-            };
-            fetchRootInfo();
-        }, [currentDomain, connection, nameProgram, auctionProgram]);
-
         const calculateProgress = () => {
-            const info = checingInfo[currentDomain];
-            if (!info || info.target === 0) return 0;
-            return Math.min((info.raisedAmount / info.target) * 100, 100);
+            return Math.min((currentRoot.info.state as any / (CREATE_ROOT_FEE as any)) * 100, 100);
         };
 
         const progress = calculateProgress();
         
-        const addAmount = (addingDomain: string, addingDomainInfo: createRootInfo | null) => {
-            setShowAddAmountModal(true);
-            console.log("happy");
-            setAddingDomain(addingDomain);
-            setAddingDomainInfo(addingDomainInfo)
-        };
-
-        
-
         return (
             <div className="crowdingLists">
                 <button onClick={lastItem} className="crowdButton">
                     <img src={previous} width={40} />
                 </button>
                 <div className="nowShow">
-                    <h1>{currentDomain}</h1>
-                    {checingInfo[currentDomain] ? (
+                    <h1>{currentRoot.info.name}</h1>
+                    {currentRoot ? (
                         <div className="infoBlock">
-                            <h1>{checingInfo[currentDomain]?.target}</h1>
-                            <h2>Raised: {checingInfo[currentDomain]?.raisedAmount}</h2>
+                            <h1>{CREATE_ROOT_FEE as any}</h1>
+                            <h2>Raised: {currentRoot.info.state as any}</h2>
                             <div className="progress-container">
                                 <div
                                     className="progress-bar"
                                     style={{ width: `${progress}%` }}
                                 ></div>
                             </div>
-                            <button className="donate" onClick={() => addAmount(currentDomain, checingInfo[currentDomain])}>
+                            <button className="donate" onClick={() => addAmount(currentRoot)}>
                                 add
                             </button>
                         </div>
@@ -139,7 +90,7 @@ const FundingRootInfo = () => {
     };
 
     interface AddModalProps {
-        checingInfo: createRootInfo | null; 
+        checingInfo: creatingRoot | null; 
     }
 
     const AddModal: React.FC<AddModalProps> = ({ checingInfo })  => {
@@ -165,24 +116,39 @@ const FundingRootInfo = () => {
             setWillAddAmount(0);
         };
     
-        const handleConfirmAddAmount = async (addingDomain: string) => {
-            if (willAddAmount > 0){
-                const tx = await addFundingAmount(auctionProgram, wallet, nameProgram, willAddAmount, addingDomain)
-                console.log(tx)
+        const handleConfirmAddAmount = async() => {
+            if (!checingInfo || !wallet || !signTransaction)return;
+            
+            const addTX = checingInfo.addAmount(willAddAmount, wallet);
+            if (!addTX)return;
+
+            const transaction = new Transaction().add(addTX);
+
+            const { blockhash } = await connection.getLatestBlockhash();
+                transaction.recentBlockhash = blockhash;
+                transaction.feePayer = wallet;
+
+            const signedTx = await signTransaction(transaction);
+            try{
+                const TX = await connection.sendRawTransaction(signedTx.serialize());
+                console.log("transaction success:", TX)
+            }catch(err){
+                console.log("fail:", err)
             }
+            
             console.log("add")
             closeAddModal();
         };
 
         
-        const amountOptions = [5000, 10000, 20000, 50000, 100000, checingInfo? (checingInfo.target - checingInfo.raisedAmount):(200000)];
+        const amountOptions = [5000, 10000, 20000, 50000, 100000, checingInfo? (CREATE_ROOT_FEE as any - (checingInfo.info.state as any)):(200000)];
 
         return (
             <div className="addmodal">
                 <div className="addBlock">
                     <div className="title">
                         <h1>you are checking:</h1>
-                        <h2>{addingDomain}</h2>
+                        <h2>{addingRoot?.info.name}</h2>
                     </div>
                     
                     <div className="amountInput">
@@ -223,7 +189,7 @@ const FundingRootInfo = () => {
                         </div>
                     </div>
                     
-                    <button className="addbutton confirm" onClick={() =>handleConfirmAddAmount(addingDomain)}>
+                    <button className="addbutton confirm" onClick={() =>handleConfirmAddAmount()}>
                         <h1>Confirm</h1>
                     </button>
 
@@ -245,7 +211,7 @@ const FundingRootInfo = () => {
                     <p>No items to display.</p>
                 )}
             </div>
-            {showAddAmountModal && <AddModal checingInfo={addingDomainInfo} />}
+            {showAddAmountModal && <AddModal checingInfo={addingRoot} />}
         </div>
     );
 }

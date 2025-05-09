@@ -1,9 +1,9 @@
-import { Connection, PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import { Buffer } from 'buffer';
 import { sha256 } from 'js-sha256';
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useState } from "react";
-import { Numberu32 } from "@bonfida/spl-name-service"
+import { Numberu32, Numberu64 } from "@bonfida/spl-name-service"
 import {  TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 
@@ -11,14 +11,9 @@ import {  TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 import {allocateAndPostRecordInstruction, editRecordInstruction} from "./code"
 
-export const SNS_RECORDS_ID = new PublicKey(
-  "J5EgeEXm3Y7Bqi51GSCBeY7bsvnQhKnWr2Lc94B95xdQ"
-);
 
-export const [CENTRAL_STATE_SNS_RECORDS] = PublicKey.findProgramAddressSync(
-  [SNS_RECORDS_ID.toBuffer()],
-  SNS_RECORDS_ID
-);
+
+
 
 export function allocateAndPostRecord(
   feePayer: PublicKey,
@@ -71,8 +66,6 @@ export function editRecord(
   );
   return ix;
 };
-
-
 
 
 
@@ -232,6 +225,44 @@ export default function Tetspage() {
 
   const [wantChangeCid, setWantChangeCid] = useState("");
 
+
+  //
+
+  // const test6 = async() => {
+  //   if(!publicKey || !signTransaction)return;
+  //   const SPL_NAME_SERVICE = new PublicKey("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX");
+  //   const TURE_ROOT = new PublicKey("5eoDkP6vCQBXqDV9YN2NdUs3nmML3dMRNmEYpiyVNBm2");
+  //   const RE_ID = new PublicKey("snshBoEQ9jx4QoHBpZDQPYdNCtw7RMxJvYrKFEhwaPJ")
+
+  //   const [rec , bump] = PublicKey.findProgramAddressSync(
+  //     [RE_ID.toBytes()],
+  //     RE_ID,
+  //   )
+
+  //   const createName = "ffffffffmc"
+
+  //   const ix = await createNameRegistry(SPL_NAME_SERVICE, connection, createName, 1024, publicKey, publicKey, TURE_ROOT, rec);
+
+  //   const transaction = new Transaction().add(ix);
+
+  //   const { blockhash } = await connection.getLatestBlockhash();
+  //     transaction.recentBlockhash = blockhash;
+  //     transaction.feePayer = publicKey;
+
+  //   const seed = [rec.toBytes(), 0xFD];
+
+  //   const key = Keypair.fromSeed(seed)
+
+  //   const signedTx = await signTransaction(transaction);
+  //   try{
+  //     const txid = await connection.sendRawTransaction(signedTx.serialize());
+  //     console.log("success:", txid)
+  //   }catch(err){
+  //     console.log("fail:", err)
+  //   }
+
+  // }
+
   return (
     <div style={{ marginTop: '200px', color: "black", height: '1200px', display:'flex', flexDirection: 'column', gap:'20px' }}>
       <h1 style={{color: 'white'}}>Hello world</h1>
@@ -254,7 +285,7 @@ export default function Tetspage() {
           <span>{domain}</span>
         </button>
       ))}
-      <button onClick={() => reverseTest()} style={{backgroundColor: 'red'}}>TEST</button>
+      {/* <button onClick={() => test6()} style={{backgroundColor: 'red'}}>TEST</button> */}
 
       {ipfsModal && 
          <div 
@@ -412,6 +443,129 @@ export async function getReverseKeyFromDomainKey(
 
 
 
+
+export async function createNameRegistry(
+  nameProgramId: PublicKey,
+  connection: Connection,
+  name: string,
+  space: number,
+  payerKey: PublicKey,
+  nameOwner: PublicKey,
+  parentName: PublicKey,
+  parentOwner: PublicKey,
+  lamports?: number,
+  nameClass?: PublicKey,
+): Promise<TransactionInstruction> {
+  const hashed_name =  getHashedNameSync(name);
+  const {pubkey: nameAccountKey} =  _deriveSync(name, parentName);
+
+  const balance = lamports ? lamports : await connection.getMinimumBalanceForRentExemption(space);
+
+  const createNameInstr = createInstruction(
+      nameProgramId,
+      SystemProgram.programId,
+      nameAccountKey,
+      nameOwner,
+      payerKey,
+      hashed_name,
+      new Numberu64(balance),
+      new Numberu32(space),
+      nameClass,
+      parentName,
+      parentOwner,
+  );
+
+  return createNameInstr;
+}
+
+export function createInstruction(
+  nameProgramId: PublicKey,
+  systemProgramId: PublicKey,
+  nameKey: PublicKey,
+  nameOwnerKey: PublicKey,
+  payerKey: PublicKey,
+  hashed_name: Buffer,
+  lamports: Numberu64,
+  space: Numberu32,
+  nameClassKey?: PublicKey,
+  nameParent?: PublicKey,
+  nameParentOwner?: PublicKey,
+): TransactionInstruction {
+  const buffers = [
+      Buffer.from(Uint8Array.from([0])),
+      new Numberu32(hashed_name.length).toBuffer(),
+      hashed_name,
+      lamports.toBuffer(),
+      space.toBuffer(),
+  ];
+
+  const data = Buffer.concat(buffers);
+
+  const keys = [
+      {
+          pubkey: systemProgramId,
+          isSigner: false,
+          isWritable: false,
+      },
+      {
+          pubkey: payerKey,
+          isSigner: true,
+          isWritable: true,
+      },
+      {
+          pubkey: nameKey,
+          isSigner: false,
+          isWritable: true,
+      },
+      {
+          pubkey: nameOwnerKey,
+          isSigner: false,
+          isWritable: false,
+      },
+  ];
+
+  if (nameClassKey) {
+      keys.push({
+          pubkey: nameClassKey,
+          isSigner: true,
+          isWritable: false,
+      });
+  } else {
+      keys.push({
+          pubkey: new PublicKey(Buffer.alloc(32)),
+          isSigner: false,
+          isWritable: false,
+      });
+  }
+  if (nameParent) {
+      keys.push({
+          pubkey: nameParent,
+          isSigner: false,
+          isWritable: false,
+      });
+  } else {
+      keys.push({
+          pubkey: new PublicKey(Buffer.alloc(32)),
+          isSigner: false,
+          isWritable: false,
+      });
+  }
+  if (nameParentOwner) {
+      keys.push({
+          pubkey: nameParentOwner,
+          isSigner: true,
+          isWritable: false,
+      });
+  }
+
+  return new TransactionInstruction({
+      keys,
+      programId: nameProgramId,
+      data,
+  });
+}
+
+
 export function createDomainInstruction(
   nameAccount: PublicKey,
   reverseLookup: PublicKey,
@@ -489,13 +643,6 @@ export function createDomainInstruction(
 
 //--------------------function 1-------------------
 
-export const ROOT_DOMAIN_ACCOUNT = new PublicKey(
-    "2ELNsRn2XaqMXZBsRicAcpbksXeC8qn5AiCcnRHbjroP",
-  );
-
-export const NAME_PROGRAM_ID = new PublicKey(
-  "8YXaA8pzJ4xVPjYY8b5HkxmPWixwpZu7gVcj8EvHxRDC",
-);
 
 const REGISTER = new PublicKey("E8AHgynPE6GrUmMDPcYryfAD6akXqpiQ29ME2ZBNkDZ2")
 
@@ -560,30 +707,6 @@ const vault = new PublicKey("2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh");
     return { ...result, isSub: false, parent: undefined };
   };
 
-
-  export const getNameAccountKeySync = (
-    hashed_name: Buffer,
-    nameClass?: PublicKey,
-    nameParent?: PublicKey,
-  ): PublicKey => {
-    const seeds = [hashed_name];
-    if (nameClass) {
-      seeds.push(nameClass.toBuffer());
-    } else {
-      seeds.push(Buffer.alloc(32));
-    }
-    if (nameParent) {
-      seeds.push(nameParent.toBuffer());
-    } else {
-      seeds.push(Buffer.alloc(32));
-    }
-    const [nameAccountKey] = PublicKey.findProgramAddressSync(
-      seeds,
-      NAME_PROGRAM_ID,
-    );
-    return nameAccountKey;
-  };
-
   export const getRecordV2Key = (domain: string, record: Record): PublicKey => {
     // get the parent key
     const { pubkey } = getDomainKeySync(domain);
@@ -593,25 +716,6 @@ const vault = new PublicKey("2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh");
   };
 
 
-  const _deriveSync = (
-    name: string,
-    parent: PublicKey = ROOT_DOMAIN_ACCOUNT,
-    classKey?: PublicKey,
-  ) => {
-    let hashed = getHashedNameSync(name);
-    let pubkey = getNameAccountKeySync(hashed, classKey, parent);
-    return { pubkey, hashed };
-  };
-
-  export const HASH_PREFIX = "SPL Name Service";
-
-  export const getHashedNameSync = (name: string): Buffer => {
-    const input = HASH_PREFIX + name;
-    const hashedHex = sha256(input);
-    const hashedBuffer = Buffer.from(hashedHex, "hex");
-    console.log(hashedBuffer.length);
-    return hashedBuffer;
-  };
 
 //this is the types that record can be
   export enum Record {
@@ -726,6 +830,8 @@ const vault = new PublicKey("2NFji3XWVs2tb8btmGgkunjA9AFTr5x3DaTbsrZ7abGh");
 
   import { Record as SnsRecord } from "@bonfida/sns-records";
   import { deserializeRecordV2Content } from "@bonfida/spl-name-service";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import { CENTRAL_STATE_SNS_RECORDS } from "@/utils/constants";
 
 
   

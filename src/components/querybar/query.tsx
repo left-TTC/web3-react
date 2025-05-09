@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react"
-import { getHashedName, getSeedAndKey,  queryDomain,} from "../../utils/aboutquery"
+import { queryDomain,} from "../../utils/aboutquery"
 import { useNavigate } from "react-router-dom";
 
 import "../../style/components/query.css"
-import { useNameService } from "../program/name-service-provider";
 import { useRootDomain } from "../rootenvironment/rootenvironmentprovider";
+import { getHashedName, getNameAccountKey } from "@/utils/search/getNameAccountKey";
+import { useConnection } from "@solana/wallet-adapter-react";
 
 interface QueryProps {
     initValue?: string; 
@@ -12,10 +13,11 @@ interface QueryProps {
 
 const Query = ({initValue}: QueryProps) => {
     const [queryValue, setQueryValue] = useState(initValue || "");
-    const {activeRootDomain} = useRootDomain();
     const [inputValue, setInputValue] = useState<string[]>(["", ""]);
     const navi = useNavigate();
-    const {nameProgram} = useNameService();
+
+    const {activeRootDomain, activeRootDomainPubKey, rootDomains} = useRootDomain();
+    const {connection} = useConnection();
 
     useEffect(() => {
         let newValue = inputValue[0] + inputValue[1];
@@ -32,21 +34,21 @@ const Query = ({initValue}: QueryProps) => {
         console.log("class:", domainArray[1]);
 
         let rootOpt;
-        if(activeRootDomain && nameProgram){
-            if (domainArray[1] != activeRootDomain){
-                console.log("not same, change environment");
-            }
-            const {nameAccountKey: a} = getSeedAndKey(
-                nameProgram.programId, getHashedName(activeRootDomain), null
-            );
-            rootOpt = a 
+        if(domainArray[1] == activeRootDomain){
+            rootOpt = activeRootDomainPubKey;
         }else{
-            throw new Error("no this root domain")
+            if(rootDomains.includes(domainArray[1])){
+                rootOpt = getNameAccountKey(
+                    getHashedName(domainArray[1])
+                )
+            }else{
+                throw new Error("error root domain")
+            }
         }
         
-        if (nameProgram){
+        if (rootOpt){
             const queryResult = await queryDomain(
-                domainArray[0], nameProgram.programId, rootOpt
+                domainArray[0], rootOpt, connection
             );
     
             navi("/search", {

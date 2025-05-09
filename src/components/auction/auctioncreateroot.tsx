@@ -1,17 +1,11 @@
 import "../../style/components/auction/auctioncreateroot.css"
-import {  useState } from "react";
-import { useAuctionService } from "../program/auction-provider";
-import {  useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
-import { useNameService } from "../program/name-service-provider";
-import { createRootAccount } from "@/utils/auction";
+import { useState } from "react";
+import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
+// import { createRootAccount } from "@/utils/auction";
 
 
 const AuctionCreateRoot = () => {
-    
-    const { auctionProgram } = useAuctionService();
     const { connection } = useConnection();
-    const wallet = useAnchorWallet();
-    const { nameProgram } = useNameService();
 
     const showCreateRootModal = () => {
         setShowCreateRoot(true);
@@ -37,7 +31,7 @@ const AuctionCreateRoot = () => {
 
     const clinkToCreate = async (wantCreateRoot: string) => {
         try {
-            await createRootAccount(wantCreateRoot, auctionProgram, wallet, nameProgram, connection);
+            // await 
         } catch (err) {
             console.error("Error creating root:", err);
         }

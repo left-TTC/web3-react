@@ -10,7 +10,6 @@ const Homepage = lazy(() => import('../pages/index'))
 const Searchpage = lazy(() => import('../pages/search'))
 const Userpage = lazy(() => import('../pages/user'))
 const Auctionpage = lazy(() => import('../pages/auction'))
-const Tetspage = lazy(() => import('../pages/test'))
 
 //links lib
 const links: { label: string; path: string }[] = [
@@ -19,7 +18,6 @@ const links: { label: string; path: string }[] = [
   {label: 'Main', path: '/index'},
   {label: 'Home', path: '/user'},
   {label: 'Auction', path: '/auction'},
-  {label: 'Test', path: '/test'},
 ]
 
 //route reflect
@@ -31,7 +29,6 @@ const routes: RouteObject[] = [
   { path: '/search', element: <Searchpage />},
   { path: '/user', element: <Userpage />},
   { path: '/auction', element: <Auctionpage />},
-  { path: 'test', element: <Tetspage />},
 ]
 
 export function AppRoutes() {
