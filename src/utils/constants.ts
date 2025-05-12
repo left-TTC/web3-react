@@ -19,7 +19,7 @@ export const WEB3_REGISTER_ID = new PublicKey(
 );
 
 export const WEB3_AUCTION_ID = new PublicKey(
-    "9JzGVN9y1BgjCWKp4nJmeUnud3FGsP1zKV4VaarqwucZ"
+    "9qQuHLMAJEehtk47nKbY1cMAL1bVD7nQxno4SJRDth7"
 );
 
 export const VAULT = new PublicKey(
@@ -32,14 +32,14 @@ export const [CENTRAL_STATE_RECORDS] = PublicKey.findProgramAddressSync(
 );
 
 export const [CENTRAL_STATE_AUCTION] = PublicKey.findProgramAddressSync(
-    [WEB3_RECORDS_ID.toBuffer()],
-    WEB3_RECORDS_ID
+    [WEB3_AUCTION_ID.toBuffer()],
+    WEB3_AUCTION_ID
 );
 
 export const [CENTRAL_STATE_REGISTER] = PublicKey.findProgramAddressSync(
-    [WEB3_RECORDS_ID.toBuffer()],
-    WEB3_RECORDS_ID
+    [WEB3_REGISTER_ID.toBuffer()],
+    WEB3_REGISTER_ID
 );
 
-export const CREATE_ROOT_FEE = new Numberu64(10000);
+export const CREATE_ROOT_FEE = 10000;
 

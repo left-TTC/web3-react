@@ -1,7 +1,5 @@
 import { PublicKey, Connection} from '@solana/web3.js'; 
-import { getHashedName, getNameAccountKey } from './search/getNameAccountKey';
-
-
+import { getHashedName, getNameAccountKey } from './getNameAccountKey';
 
 
 export async function queryDomain(

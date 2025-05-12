@@ -1,11 +1,16 @@
 import "../../style/components/auction/auctioncreateroot.css"
 import { useState } from "react";
-import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { getAuctionRecordKey, getHashedName } from "@/utils/search/getNameAccountKey";
+import { createRootFundInstruction } from "@/utils/auction/createRootDomainInstruction";
+import { Transaction } from "@solana/web3.js";
+import { CENTRAL_STATE_AUCTION } from "@/utils/constants";
 // import { createRootAccount } from "@/utils/auction";
 
 
 const AuctionCreateRoot = () => {
     const { connection } = useConnection();
+    const { publicKey: wallet, signTransaction} = useWallet()
 
     const showCreateRootModal = () => {
         setShowCreateRoot(true);
@@ -30,8 +35,40 @@ const AuctionCreateRoot = () => {
     };
 
     const clinkToCreate = async (wantCreateRoot: string) => {
+        if (!wallet || !signTransaction)return;
+
+        console.log("start, name is:", wantCreateRoot)
+
+        const rootRecordAccount = getAuctionRecordKey(
+            getHashedName(wantCreateRoot), null, null
+        )
+
+        console.log("rootRecord:", rootRecordAccount.toBase58());
+
+        const createFeeSaverAccount = getAuctionRecordKey(
+            getHashedName(wantCreateRoot), CENTRAL_STATE_AUCTION, CENTRAL_STATE_AUCTION
+        );
+        console.log("fee_saver:", createFeeSaverAccount.toBase58());
+
+
+        const fundtx = createRootFundInstruction(
+            rootRecordAccount,
+            wallet,
+            createFeeSaverAccount,
+            wantCreateRoot,
+        )
+
         try {
-            // await 
+            const transaction = new Transaction().add(fundtx);
+            const { blockhash } = await connection.getLatestBlockhash();
+                transaction.recentBlockhash = blockhash;
+                transaction.feePayer = wallet;
+
+            const signedTx = await signTransaction(transaction);
+
+            const txId = await connection.sendRawTransaction(signedTx.serialize());
+
+            console.log("transaction success:", txId);
         } catch (err) {
             console.error("Error creating root:", err);
         }

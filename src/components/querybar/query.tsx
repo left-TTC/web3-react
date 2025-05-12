@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { queryDomain,} from "../../utils/aboutquery"
+import { queryDomain,} from "../../utils/search/queryDomain"
 import { useNavigate } from "react-router-dom";
 
 import "../../style/components/query.css"

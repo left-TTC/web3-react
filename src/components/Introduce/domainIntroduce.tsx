@@ -52,6 +52,8 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
     const hashedName = getHashedName(domainArray[0]);
     // const hashedName = Buffer.from(hashedNameUint8);
     let rootOpt;
+    console.log("domain:", domainArray[0])
+    console.log("root:", domainArray[1]);
     if(domainArray[1] == activeRootDomain){
         rootOpt = activeRootDomainPubKey;
     }else{
@@ -65,9 +67,13 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
         }
     }
 
+    if(!rootOpt)return;
+
     const nameAccountKey = getNameAccountKey(
         hashedName, null, rootOpt
     )
+
+    console.log("nameaccount:", nameAccountKey.toBase58())
 
     const reverseLookup = getNameAccountKey(
         getHashedName(nameAccountKey.toBase58()), CENTRAL_STATE_REGISTER, null
@@ -85,7 +91,10 @@ const Showdomain: React.FC<introduceProps> = ({ domainName, domainInfo }) => {
             }
         }
 
-        if(!wallet || !signTransaction || !rootOpt)return;
+        if(!wallet || !signTransaction)return;
+
+        console.log("root:", rootOpt.toBase58())
+        console.log("list:", rootDomainsPubKey[0].toBase58())
 
         //test
         const space = new Numberu32(1024);

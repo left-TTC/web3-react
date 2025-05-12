@@ -13,7 +13,7 @@ export class AuctionRecord {
     static HEADER_LEN = 40; // 32 bytes for PublicKey + 8 bytes for u64
 
     rootNameKey: PublicKey;
-    amount: Numberu64;
+    amount: number;
     name: string;
 
     static schema = {
@@ -40,7 +40,7 @@ export class AuctionRecord {
         name: string;
     }) {
         this.rootNameKey = new PublicKey(obj.rootNameKey);
-        this.amount = new Numberu64(obj.amount);
+        this.amount = obj.amount as number;
         this.name = obj.name;
     }
 
@@ -54,7 +54,12 @@ export class AuctionRecord {
             data
         ) as DeserializedAuctionRecord;
 
-        const nameStr = Buffer.from(name).toString('utf-8').replace(/\0+$/, '');
+        console.log("name data:", name)
+
+        const buffer = Buffer.from(name); 
+        const vecLength = buffer.readUInt32LE(0); 
+        const nameBuffer = buffer.slice(4, 4 + vecLength);
+        const nameStr = nameBuffer.toString("utf-8").replace(/\0+$/, '');
 
         return new AuctionRecord({
             rootNameKey,
@@ -96,7 +101,7 @@ export class AuctionRecord {
 
         const serializedData = serialize(AuctionRecord.schema, {
             rootNameKey: this.rootNameKey.toBytes(),
-            amount: this.amount.toBuffer(),
+            amount: new Numberu64(this.amount).toBuffer(),
             name: nameBuffer
         });
     

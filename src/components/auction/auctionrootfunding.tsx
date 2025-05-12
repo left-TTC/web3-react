@@ -20,11 +20,13 @@ const FundingRootInfo = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            setCreatingLists(await findCreatingRootDomains(connection));
+            const lists = await findCreatingRootDomains(connection);
+            console.log("find lists:", lists)
+            setCreatingLists(lists);
         };
 
         fetchData();
-    }, [connection]);
+    }, [wallet]);
 
     const [addingRoot, setAddingRoot] = useState<creatingRoot | null>(null);
 
@@ -52,8 +54,10 @@ const FundingRootInfo = () => {
         };
 
         const calculateProgress = () => {
-            return Math.min((currentRoot.info.state as any / (CREATE_ROOT_FEE as any)) * 100, 100);
-        };
+            const currentState = Number(currentRoot.info.state);
+            const createFee = Number(CREATE_ROOT_FEE);
+            return Math.min((currentState / createFee) * 100, 100);
+          };
 
         const progress = calculateProgress();
         
@@ -66,8 +70,8 @@ const FundingRootInfo = () => {
                     <h1>{currentRoot.info.name}</h1>
                     {currentRoot ? (
                         <div className="infoBlock">
-                            <h1>{CREATE_ROOT_FEE as any}</h1>
-                            <h2>Raised: {currentRoot.info.state as any}</h2>
+                            <h1>{Number(CREATE_ROOT_FEE)}</h1>
+                            <h2>Raised: {Number(currentRoot.info.state)}</h2>
                             <div className="progress-container">
                                 <div
                                     className="progress-bar"
@@ -115,6 +119,7 @@ const FundingRootInfo = () => {
             setShowAddAmountModal(false);
             setWillAddAmount(0);
         };
+        
     
         const handleConfirmAddAmount = async() => {
             if (!checingInfo || !wallet || !signTransaction)return;
@@ -141,7 +146,7 @@ const FundingRootInfo = () => {
         };
 
         
-        const amountOptions = [5000, 10000, 20000, 50000, 100000, checingInfo? (CREATE_ROOT_FEE as any - (checingInfo.info.state as any)):(200000)];
+        const amountOptions = [5000, 9000, 20000, 50000, 100000, checingInfo? (CREATE_ROOT_FEE  - Number(checingInfo.info.state) ):(200000)];
 
         return (
             <div className="addmodal">

@@ -1,5 +1,6 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { WEB3_AUCTION_ID, WEB3_NAME_SERVICE_ID } from "../constants";
+import { CENTRAL_STATE_AUCTION, CENTRAL_STATE_REGISTER, WEB3_AUCTION_ID, WEB3_NAME_SERVICE_ID } from "../constants";
+import { getHashedName, getNameAccountKey } from "./getNameAccountKey";
 
 
 
@@ -38,7 +39,19 @@ export async function getAllRootDomain(
         {
           memcmp: {
             offset: 32,
-            bytes: WEB3_AUCTION_ID.toBase58(),
+            bytes: CENTRAL_STATE_REGISTER.toBase58(),
+          },
+        },
+        {
+          memcmp: {
+            offset: 0,
+            bytes: PublicKey.default.toBase58(),
+          },
+        },
+        {
+          memcmp: {
+            offset: 64,
+            bytes: PublicKey.default.toBase58(),
           },
         },
       ];

@@ -41,6 +41,8 @@ export async function reverseLookup(
             reverseClass = CENTRAL_STATE_REGISTER;
     }
 
+    console.log("reversing:", nameAccount.toBase58())
+
     const reverseKey = getReverseKeyFromDomainKey(nameAccount, reverseClass, parent);
   
     const info =  await connection.getAccountInfo(reverseKey);
@@ -58,21 +60,45 @@ export async function reverseLookup(
 }
 
 
-// export async function getMultipleReverseLookup(
-//     connection: Connection,
-//     nameAccount: PublicKey,
-//     domainType: FindType,
-//     parent: PublicKey | null,
-// ){
-//   let reverseClass: PublicKey;
-//   switch (domainType) {
-//       case FindType.Root:
-//           reverseClass = CENTRAL_STATE_AUCTION;
-//           if (parent)return;
-//           break;
-//       case FindType.Common:
-//           reverseClass = CENTRAL_STATE_REGISTER;
-//   }
+export async function getMultipleReverseLookup(
+    connection: Connection,
+    nameAccounts: PublicKey[],
+    domainType: FindType,
+    parent: PublicKey | null,
+){
+  let reverseClass: PublicKey;
+  switch (domainType) {
+      case FindType.Root:
+          reverseClass = CENTRAL_STATE_AUCTION;
+          if (parent)return;
+          break;
+      case FindType.Common:
+          reverseClass = CENTRAL_STATE_REGISTER;
+  }
 
-//   const reverseKeys = await
-// }
+  let reverseKeys: PublicKey[] = [];
+  for(const nameAccount of nameAccounts){
+    const reverse = getReverseKeyFromDomainKey(nameAccount, reverseClass, parent);
+    reverseKeys.push(reverse);
+  }
+
+  if(reverseKeys.length === 0)return;
+
+  const infos = await connection.getMultipleAccountsInfo(reverseKeys);
+
+  let returns: string[] = []
+  for (const info of infos){
+    if (info){
+        const res = new NameRegistryState(
+            deserialize(NameRegistryState.schema, info.data) as any,
+        );
+        res.data = info.data?.slice(NameRegistryState.HEADER_LEN);
+
+        returns.push(deserializeReverse(res.data, !!parent))
+    }else{
+        returns.push("");
+    }
+  }
+
+  return returns
+}

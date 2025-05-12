@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useRootDomain } from "./rootenvironmentprovider";
 import "@/style/pages/rootchooser.css"
+import { getHashedName, getNameAccountKey } from "@/utils/search/getNameAccountKey";
 
 
 export function RootDomainChooser(){
-    const {rootDomains, activeRootDomain, setActiveRootDomain, refreshRootDomains, loading} = useRootDomain();
+    const {rootDomains, activeRootDomain, setActiveRootDomain, refreshRootDomains, loading, setActiveRootDomainPubkey, rootDomainsPubKey} = useRootDomain();
     const [showChooseModal, setShowChooseModal] = useState(false);
     const [ifrefresh, setIfRefresh] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    
-
     
     if (loading){
         const clickShowChooseModal = () => {
@@ -25,9 +24,30 @@ export function RootDomainChooser(){
 
         }
 
+        console.log("roots:", rootDomains);
+
         const filteredDomains = rootDomains.filter(domain =>
             domain.toLowerCase().includes(searchTerm.toLowerCase())
-        ).slice(0, -1);
+        );
+
+        const chooseRoot = (domain: string) => {
+            console.log("choose name:", domain)
+            const rootNameAccount = getNameAccountKey(
+                getHashedName(domain), null, null
+            )
+            console.log("key:", rootNameAccount.toBase58())
+            console.log("xyz:", rootDomainsPubKey[0].toBase58())
+            console.log("web3:", rootDomainsPubKey[1].toBase58())
+            if (rootDomainsPubKey.some(pubkey => pubkey.equals(rootNameAccount))){
+                setActiveRootDomain(domain);
+                setActiveRootDomainPubkey(rootNameAccount);
+            }else{
+                console.log("err")
+            }
+            setShowChooseModal(false);
+        }
+
+        console.log("fliter:", filteredDomains)
     
 
         return(
@@ -56,11 +76,7 @@ export function RootDomainChooser(){
                                     <div 
                                         key={domain}
                                         className={`domain-item ${activeRootDomain === domain ? 'active' : ''}`}
-                                        onClick={() => {
-                                            setActiveRootDomain(domain);
-                                            setShowChooseModal(false);
-                                        }}
-                                    >
+                                        onClick={() => chooseRoot(domain)}>
                                         {domain}
                                     </div>
                                 ))

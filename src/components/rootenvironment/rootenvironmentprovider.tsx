@@ -14,6 +14,7 @@ export interface RootDomainProviderContext {
     rootDomainsPubKey: PublicKey[];
     activeRootDomainPubKey: PublicKey | null;
     setActiveRootDomain: (domain: string) => void;
+    setActiveRootDomainPubkey: (pubkey: PublicKey) => void;
     refreshRootDomains: () => Promise<void>;
     loading: boolean;
 }
@@ -25,6 +26,7 @@ const RootDomainContext = React.createContext<RootDomainProviderContext>({
     rootDomainsPubKey: [],
     activeRootDomainPubKey: null,
     setActiveRootDomain: () => {},
+    setActiveRootDomainPubkey: () => {},
     refreshRootDomains: async () => {},
     loading: false,
 });
@@ -56,40 +58,31 @@ export function RootDomainProvider({ children }: { children: ReactNode }) {
 
     const [activeRootDomain, setActiveRootDomain] = useAtom(activeRootDomainAtom);
     const [rootDomains, setRootDomains] = useAtom(rootDomainsAtom);
-    const [activeRootDomainPubKey, setActiveRootDomainPubKey] = useAtom(activeRootDomainsPubAtom);
+    const [activeRootDomainPubKey, setActiveRootDomainPubkey] = useAtom(activeRootDomainsPubAtom);
     const [rootDomainsPubKey, setRootDomainsPubKey] = useAtom(rootDomainsPubAtom);
     const [loading, setLoading] = useState(false);
   
     const refreshRootDomains = useCallback(async () => {
-      
       setLoading(true);
       try {
         const domains = await getAllRootDomain(connection);
+        console.log("root number:", domains.length);
+
         setRootDomainsPubKey(domains);
 
-        let tmpDomains: string[] = [];
-        for(let i = 0; i < domains.length; i++){
-          const checkingDomain = await reverseLookup(
-            connection, rootDomainsPubKey[i], FindType.Root, null
-          );
+        const domainPromises = domains.map(domain => 
+          reverseLookup(connection, domain, FindType.Root, null)
+        );
+        const resolvedDomains = (await Promise.all(domainPromises)).filter(Boolean) as string[];
+  
+        setRootDomains(resolvedDomains);
 
-          if (checkingDomain){
-            tmpDomains.push(checkingDomain);
-          } 
+        if (!activeRootDomain && resolvedDomains.length > 0) {
+          setActiveRootDomain(resolvedDomains[0]);
+          setActiveRootDomainPubkey(domains[0]);
         }
 
-        setRootDomains(tmpDomains);
-
-        if(!activeRootDomain){
-            setActiveRootDomain(rootDomains[0]);
-            setActiveRootDomainPubKey(rootDomainsPubKey[0])
-        }
-
-        if(domains.length < 2){
-            setLoading(false);
-        }
-        
-        if (activeRootDomainPubKey && !domains.includes(activeRootDomainPubKey)) {
+        if (activeRootDomainPubKey && !domains.some(d => d.equals(activeRootDomainPubKey))) {
           setActiveRootDomain(null);
         }
       } catch (error) {
@@ -107,6 +100,7 @@ export function RootDomainProvider({ children }: { children: ReactNode }) {
         rootDomainsPubKey,
         activeRootDomainPubKey,
         setActiveRootDomain,
+        setActiveRootDomainPubkey,
         refreshRootDomains,
         loading,
     }), [rootDomains, activeRootDomain, setActiveRootDomain, refreshRootDomains, loading]);

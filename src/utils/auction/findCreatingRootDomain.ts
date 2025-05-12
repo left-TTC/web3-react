@@ -1,5 +1,5 @@
 import { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { CENTRAL_STATE_AUCTION, CREATE_ROOT_FEE, WEB3_AUCTION_ID } from "../constants";
+import { CENTRAL_STATE_AUCTION, CENTRAL_STATE_REGISTER, CREATE_ROOT_FEE, WEB3_AUCTION_ID } from "../constants";
 import { AuctionRecord } from "./auctionRecord";
 import { Numberu64 } from "@bonfida/spl-name-service";
 import { getAuctionRecordKey, getHashedName, getNameAccountKey } from "../search/getNameAccountKey";
@@ -8,9 +8,9 @@ import { createRootInstruction } from "./createRootDomainInstruction";
 export class AuctionKey {
     key: PublicKey;
     name: string;
-    state: Numberu64;
+    state: number;
 
-    constructor(accountKey: PublicKey, name: string, state: Numberu64){
+    constructor(accountKey: PublicKey, name: string, state: number){
         this.key = accountKey;
         this.name = name;
         this.state = state;
@@ -43,18 +43,28 @@ export async function findCreatingRootDomains(
                 const rootRecordAccount = getAuctionRecordKey(
                     getHashedName(this.info.name), null, null,
                 );
+                console.log("record:", rootRecordAccount.toBase58())
                 const rootNameAccount = getNameAccountKey(
                     getHashedName(this.info.name), null, null,
                 );
+                console.log("rootName:", rootNameAccount.toBase58())
                 const rootReverseLookup = getNameAccountKey(
                     getHashedName(rootNameAccount.toBase58()), CENTRAL_STATE_AUCTION, null,
                 )
+                console.log("centarl is:", CENTRAL_STATE_AUCTION.toBase58())
+                console.log("rootReverse:", rootReverseLookup.toBase58())
+
+                const createFeeSaverAccount = getAuctionRecordKey(
+                    getHashedName(this.info.name), CENTRAL_STATE_AUCTION, CENTRAL_STATE_AUCTION
+                );
+                console.log("fee_saver:", createFeeSaverAccount.toBase58());
 
                 return createRootInstruction(
                     rootRecordAccount,
                     usrKey,
                     rootNameAccount,
                     rootReverseLookup,
+                    createFeeSaverAccount,
                     addAmount,
                     this.info.name
                 )
@@ -70,19 +80,21 @@ export async function getCreatingInfos(
     accounts: PublicKey[],
     connection: Connection,
 ): Promise<AuctionKey[]> {
-    let returnArr: AuctionKey[] = [];
     
     const allRecordAccounts = await AuctionRecord.retrieveBatch(connection, accounts);
 
     let cretingRootAccount: AuctionKey[] = [];
     if(allRecordAccounts){
         for (const record of allRecordAccounts){
-            if (record && record.amount < CREATE_ROOT_FEE){
+            console.log("amount:", record?.amount)
+            console.log("fee:", (CREATE_ROOT_FEE as any))
+            if (record && record.amount <= CREATE_ROOT_FEE){
+                console.log("name:", record.name)
                 const OK = new AuctionKey(record.rootNameKey, record.name, record.amount)
                 cretingRootAccount.push(OK)
             }
         }
     }
 
-    return returnArr
+    return cretingRootAccount
 }
