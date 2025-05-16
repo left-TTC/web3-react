@@ -1,6 +1,7 @@
 import { UiLayout } from '@/components/ui/ui-layout'
 import { lazy } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
+import Test2page from '../pages/test2'
 
 //Load on demand
 // const AccountListFeature = lazy(() => import('../components/account/account-list-feature'))
@@ -10,6 +11,7 @@ const Homepage = lazy(() => import('../pages/index'))
 const Searchpage = lazy(() => import('../pages/search'))
 const Userpage = lazy(() => import('../pages/user'))
 const Auctionpage = lazy(() => import('../pages/auction'))
+const TestPage = lazy(() => import('../pages/test2'))
 
 //links lib
 const links: { label: string; path: string }[] = [
@@ -18,6 +20,7 @@ const links: { label: string; path: string }[] = [
   {label: 'Main', path: '/index'},
   {label: 'Home', path: '/user'},
   {label: 'Auction', path: '/auction'},
+  {label: 'Test', path: '/test'}
 ]
 
 //route reflect
@@ -29,6 +32,7 @@ const routes: RouteObject[] = [
   { path: '/search', element: <Searchpage />},
   { path: '/user', element: <Userpage />},
   { path: '/auction', element: <Auctionpage />},
+  { path: '/test', element: <Test2page />}
 ]
 
 export function AppRoutes() {

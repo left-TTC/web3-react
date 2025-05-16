@@ -18,7 +18,7 @@ export enum ClusterNetwork {
   Mainnet = 'mainnet-beta',
   Testnet = 'testnet',
   Devnet = 'devnet',
-  Custom = 'custom',
+  Custom = 'aa',
 }
 
 // By default, we don't configure the mainnet-beta cluster
@@ -40,7 +40,12 @@ export const defaultClusters: Cluster[] = [
     name: 'mainnet-beta',
     endpoint: clusterApiUrl('mainnet-beta'),
     network: ClusterNetwork.Mainnet,
-  }
+  },
+  {
+    name: 'custom-mainnet',
+    endpoint: 'https://quicknode-proxy.bonfida.com/', 
+    network: ClusterNetwork.Custom,
+  },
 ]
 
 //jotai's atomWitheStorage

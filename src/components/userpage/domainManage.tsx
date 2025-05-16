@@ -3,19 +3,21 @@ import { PublicKey } from "@solana/web3.js"
 import "@/style/components/usr/domainmanage.css"
 import { useRootDomain } from "../rootenvironment/rootenvironmentprovider"
 import { useEffect, useState } from "react";
-import { Record as Records } from "@/utils/record/record";
+import { RecordResult, Record as Records } from "@/utils/record/record";
+import { getDomainRecords } from "@/utils/record/getUsrRecord";
+import { useConnection } from "@solana/wallet-adapter-react";
 
 
 interface domainManegeProps {
     usrDomain: string[],
     activeRootDomainkey: PublicKey | null,
+    clickOpenRecordsModal: (domain: string) => void,
 }
 
-
-
-const DomainManage: React.FC<domainManegeProps> = ({ usrDomain, activeRootDomainkey}) => {
+const DomainManage: React.FC<domainManegeProps> = ({ usrDomain, activeRootDomainkey, clickOpenRecordsModal }) => {
 
     const {activeRootDomain} = useRootDomain();
+    const {connection} = useConnection();
 
     const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
 
@@ -27,27 +29,52 @@ const DomainManage: React.FC<domainManegeProps> = ({ usrDomain, activeRootDomain
         
         setExpandedDomains(initialExpandedState);
       }, [usrDomain]);
-    
+
+    const [domainRecordResults, setDomainRecordResult] = useState<Partial<Record<string, (RecordResult | undefined)[]>>>({})
+
+    const updateRecords = (domain: string, queryRecordsResult: (RecordResult | undefined)[]) => {
+        setDomainRecordResult(prev => ({
+            ...prev,
+            [domain]: queryRecordsResult
+          }));
+    };
+
+    const getUsrRecords = async(queryingDomain: string) => {
+        console.log("get records")
+        if (!activeRootDomainkey)return
+        const queryingResult =  await getDomainRecords(connection, queryingDomain, Object.values(Records), activeRootDomainkey);
+        console.log("the records result:", queryingResult)
+        if (!queryingResult)return
+        updateRecords(queryingDomain, queryingResult)
+    }
+
     const manageDesignatedDoamin = (domain: string) => {
         setExpandedDomains(prev => ({
             ...prev,
             [domain]: !prev[domain] 
         }))
+        if (!domainRecordResults[domain] || !domainRecordResults[domain]?.some(item => item !== undefined)){
+            getUsrRecords(domain)
+        }
     }
 
-    const [domainRecords, setDomainRecords] = useState<Partial<Record<Records, PublicKey | null>>>({});
-    const [reachableRecords, setReachableRecords] = useState<Partial<Record<Records, PublicKey>> | null>(null);
+    const createAnrecords = async(domain: string) => {
+        console.log("create name:", domain)
+        clickOpenRecordsModal(domain)
+    }
 
-    const updateRecord = (type: Records, pubkey: PublicKey | null) => {
-        setDomainRecords(prev => ({
-          ...prev,
-          [type]: pubkey
-        }));
-    };
-
-    const getUsrRecords = async() => {}
-
-    
+    const showMapResult = (results: (RecordResult | undefined)[] = []) => {
+        const filteredResults = results.filter(
+          (item): item is RecordResult => item !== undefined
+        );
+      
+        return filteredResults.map((result, index) => (
+          <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+            <h1>{String(result.record)}</h1>
+            <h2>{String(result.deserializedContent)}</h2>
+          </div>
+        ));
+      };
 
     return (
         <div className="domainManage">
@@ -61,11 +88,15 @@ const DomainManage: React.FC<domainManegeProps> = ({ usrDomain, activeRootDomain
                     <div className="recordBlock">
                         <div style={{display:'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                             <h1 style={{fontSize: '21px', marginTop: '10px', fontWeight: '600'}}>Domain Records</h1>
-                            <button className="addbutton">add</button>
+                            <button className="addbutton" onClick={() => createAnrecords(domain)}>add</button>
                         </div>
                         <hr className="divider" />
                         <div className="recordshow" style={{margin: '10px 0'}}>
-                            <h1 style={{fontSize: '16px', fontWeight: '600', color: 'white'}}>No Records</h1>
+                            {domainRecordResults[domain]?.some(item => item !== undefined)? (
+                                showMapResult(domainRecordResults[domain])
+                            ) : (
+                                <h1 style={{fontSize: '16px', fontWeight: '600', color: 'white'}}>No Records</h1>
+                            )} 
                         </div>
                         <hr className="divider" />
                         <div style={{display: 'flex', justifyContent: 'center'}}>

@@ -1,29 +1,31 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useState } from 'react';
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 import "@/style/pages/user.css"
+
 import { useRootDomain } from "@/components/rootenvironment/rootenvironmentprovider";
 import { getUsrAllDomainsByRoot } from "@/utils/search/getAllDomains";
 import { FindType, getMultipleReverseLookup } from "@/utils/search/reverseLookup";
 import AccountInfo from "@/components/userpage/accountInfo";
 import DomainManage from "@/components/userpage/domainManage";
+import RecordsCreate from "@/components/userpage/recordsCreate";
 
 
 export default function Userpage(){
-    const { publicKey: wallet, connected, signTransaction} = useWallet();
+    const { publicKey: wallet} = useWallet();
     const { connection } = useConnection();
     const { activeRootDomain, activeRootDomainPubKey } = useRootDomain()
 
 
-    const [ isWalletConnected, setIsWalletConnected] = useState(false);
-    const [ usrDomain, setUsrDomain ] = useState<string[]>([]);
+    const [addRecordModal, setAddRecordModal] = useState(false);
+    const [recordingDomain, setRecordingDomain] = useState("");
+    const [usrDomain, setUsrDomain] = useState<string[]>([]);
 
-    useEffect(() => {
-        if (wallet){
-            setIsWalletConnected(true);
-        }
-    }, [wallet])
+    const addRecords = (domain: string) => {
+        console.log("click to create records")
+        setAddRecordModal(true)
+        setRecordingDomain(domain)
+    }
 
     useEffect(() => {
         const fetchUsrDomain = async() => {
@@ -59,7 +61,10 @@ export default function Userpage(){
                 marginTop: '30px',
                 fontWeight: '700',
                 color: 'white'}}>Checking Domain: {activeRootDomain}</h1>
-            <DomainManage usrDomain={usrDomain} activeRootDomainkey={activeRootDomainPubKey}  />
+            <DomainManage usrDomain={usrDomain} activeRootDomainkey={activeRootDomainPubKey} clickOpenRecordsModal={(domain: string) => addRecords(domain)} />
+            {addRecordModal && 
+            <RecordsCreate creatingDomain={recordingDomain} />
+            }
         </div>
     )
 

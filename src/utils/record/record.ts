@@ -1,3 +1,4 @@
+import { RecordState } from "./recordHeader";
 
 
 export enum Record {
@@ -28,6 +29,14 @@ export enum Record {
     Background = "background",
     BASE = "BASE",
     IPNS = "IPNS",
+    WECHAT = "WECHAT",
+}
+
+
+export interface RecordResult {
+    retrievedRecord: RecordState;
+    record: Record;
+    deserializedContent: string;
 }
 
 

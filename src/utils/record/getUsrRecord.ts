@@ -1,13 +1,11 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { Record } from "./record";
+import { Record, RecordResult } from "./record";
 import { getHashedName, getNameAccountKey } from "../search/getNameAccountKey";
 import { CENTRAL_STATE_RECORDS } from "../constants";
-import { RecordResult } from "@bonfida/spl-name-service";
+import { RecordState } from "./recordHeader";
 
 
-
-
-
+//IPFS.domain.root 
 export function getDomainRecordKey(
     domain: string,
     recordType: Record,
@@ -32,5 +30,18 @@ export async function getDomainRecords(
     domainParent: PublicKey,
 ): Promise<(RecordResult | undefined)[]> {
     const recordKeys = records.map((record) => getDomainRecordKey(domain, record, domainParent))
+    const retrievedRecords = await RecordState.retrieveBatch(connection, recordKeys);
 
+    const shouldReturn = retrievedRecords.map((currentRecord, index) => {
+        if(!currentRecord) return undefined;
+        console.log(currentRecord.data)
+        const result: RecordResult = {
+            retrievedRecord: currentRecord,
+            record: records[index],
+            deserializedContent: RecordState.getReadableData(currentRecord.data),
+        }
+        return result
+    })
+
+    return shouldReturn;
 }

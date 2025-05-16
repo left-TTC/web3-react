@@ -35,9 +35,6 @@ export function RootDomainChooser(){
             const rootNameAccount = getNameAccountKey(
                 getHashedName(domain), null, null
             )
-            console.log("key:", rootNameAccount.toBase58())
-            console.log("xyz:", rootDomainsPubKey[0].toBase58())
-            console.log("web3:", rootDomainsPubKey[1].toBase58())
             if (rootDomainsPubKey.some(pubkey => pubkey.equals(rootNameAccount))){
                 setActiveRootDomain(domain);
                 setActiveRootDomainPubkey(rootNameAccount);
